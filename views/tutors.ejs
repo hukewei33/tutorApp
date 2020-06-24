@@ -1,0 +1,74 @@
+<%- include("header") -%>
+
+<h1>tutors</h1>
+<div class="container">
+  <form class="" action="/tutors" method="post">
+    <fieldset>
+      <legend>What Will You be Teaching?</legend>
+      <div class="form-row">
+
+        <div class="form-group col-md-4">
+          <label for="inputSubject">Subject</label>
+          <select id="inputSubject" class="form-control custom-select" name="subject" required>
+            <option value="Math">Math</option>
+            <option value="Science">Science</option>
+            <option value="English">English</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="inputLevels">Level</label>
+          <select id="inputLevels" class="form-control custom-select" name="levels" required multiple>
+            <option value="1">sec 1</option>
+            <option value="2">sec 2</option>
+            <option value="3">sec 3</option>
+            <option value="4">sec 4</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="inputKind">Subject</label>
+          <select id="inputKind" class="form-control custom-select" name="kind" required multiple>
+            <option value="Conceptual">Conceptual</option>
+            <option value="Homework">Homework</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>When will you be teaching?</legend>
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="inputDate">Date</label> <br>
+          <input type="date" id = "inputDate" name="date" value="">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputTime">Time (you can select multiple times)</label>
+          <select id="inputTime" class="form-control custom-select" name="time" required multiple size = "5" >
+            <option value="0000">00:00</option>
+            <option value="0100">01:00</option>
+            <option value="0200">02:00</option>
+            <option value="0300">03:00</option>
+            <option value="0400">04:00</option>
+            <option value="0500">05:00</option>
+            <option value="0600">06:00</option>
+            <option value="0700">07:00</option>
+            <option value="0800">08:00</option>
+            <option value="0900">09:00</option>
+            <option value="1000">10:00</option>
+            <option value="1100">11:00</option>
+            <option value="1200">12:00</option>
+          </select>
+        </div>
+
+      </div>
+    </fieldset>
+
+
+
+    <button type="submit" class="btn btn-primary">Submit!</button>
+  </form>
+</div>
+
+
+<%- include("footer") -%>

@@ -1,0 +1,62 @@
+<%- include("header") -%>
+
+<h1>students result</h1>
+
+<div class="container">
+<h1>Perfect matches</h1>
+  <div class="card-group">
+    <% perfectList.forEach(function(match){ %>
+      <div class="card text-white bg-success  mb-3" style="width: 18rem;">
+        <div class="card-header ">Tutor Name PlaceHolder?</div>
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 ">Match details</h6>
+          <p class="card-text">Subject: <%=  match.subject %> </p>
+          <p class="card-text">Level: <%=  match.level %> </p>
+          <p class="card-text">Lesson Type: <%=  match.kind %> </p>
+          <p class="card-text">Date: <%=  match.date %> </p>
+          <p class="card-text">Time: <%=  match.time %> </p>
+          <a href="/students" class="btn btn-dark">Select</a>
+        </div>
+      </div>
+    <%});%>
+  </div>
+
+<h1>Same Date Matches</h1>
+  <div class="card-group">
+    <% sameDateList.forEach(function(match){ %>
+      <div class="card text-white bg-primary mb-3" style="width: 18rem;">
+        <div class="card-header ">Tutor Name PlaceHolder?</div>
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 ">Match details</h6>
+          <p class="card-text">Subject: <%=  match.subject %> </p>
+          <p class="card-text">Level: <%=  match.level %> </p>
+          <p class="card-text">Lesson Type: <%=  match.kind %> </p>
+          <p class="card-text">Date: <%=  match.date %> </p>
+          <p class="card-text">Time: <%=  match.time %> </p>
+          <a href="/students" class="btn btn-dark">Select</a>
+        </div>
+      </div>
+    <%});%>
+  </div>
+
+<h1>Same time matches</h1>
+  <div class="card-group">
+    <% sameTimeList.forEach(function(match){ %>
+      <div class="card text-white bg-info mb-3" style="width: 18rem;">
+        <div class="card-header ">Tutor Name PlaceHolder?</div>
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 ">Match details</h6>
+          <p class="card-text">Subject: <%=  match.subject %> </p>
+          <p class="card-text">Level: <%=  match.level %> </p>
+          <p class="card-text">Lesson Type: <%=  match.kind %> </p>
+          <p class="card-text">Date: <%=  match.date %> </p>
+          <p class="card-text">Time: <%=  match.time %> </p>
+          <a href="/students" class="btn btn-dark">Select</a>
+        </div>
+      </div>
+    <%});%>
+  </div>
+
+</div>
+
+<%- include("footer") -%>
