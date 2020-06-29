@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 //load express
 const express = require("express");
 const app = express();
@@ -13,7 +15,7 @@ app.use(bodyParser.urlencoded({
 //load mongoose
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb+srv://kenny:test123@cluster0-h1iil.mongodb.net/eduDaddyDB", {
+mongoose.connect("mongodb+srv://"+process.env.DB_USER+":"+process.env.DB_PW+"@cluster0-h1iil.mongodb.net/eduDaddyDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true}
 );
