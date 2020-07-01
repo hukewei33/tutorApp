@@ -1,0 +1,32 @@
+<%- include("header") -%>
+<%- include("loginNav") -%>
+
+
+
+<div class="constiner">
+  <h1>acocunt info</h1>
+  <%= accInfo %>
+</div>
+<div class="container">
+
+<h1>jobs</h1>
+  <div class="card-group">
+    <% jobInfo.forEach(function(match){ %>
+      <div class="card text-white bg-success  mb-3" style="width: 18rem;">
+        <div class="card-header ">Tutor Name PlaceHolder?</div>
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 ">Match details</h6>
+          <p class="card-text">Subject: <%=  match.subject %> </p>
+          <p class="card-text">Level: <%=  match.level %> </p>
+          <p class="card-text">Lesson Type: <%=  match.kind %> </p>
+          <p class="card-text">Date: <%=  match.date %> </p>
+          <p class="card-text">Time: <%=  match.time %> </p>
+          <a href="/students" class="btn btn-dark">Select</a>
+        </div>
+      </div>
+    <%});%>
+  </div>
+
+</div>
+
+<%- include("footer") -%>
