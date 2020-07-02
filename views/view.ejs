@@ -1,0 +1,30 @@
+<%- include("header") -%>
+<%- include("loginNav") -%>
+
+<h1>students result</h1>
+
+<div class="container">
+<h1>match info</h1>
+  <div class="card-group">
+
+      <div class="card text-white bg-success  mb-3" style="width: 18rem;">
+        <div class="card-header ">Tutor Name <%=  match.tutorID %></div>
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 ">Match details</h6>
+          <p class="card-text">Subject: <%=  match.subject %> </p>
+          <p class="card-text">Level: <%=  match.level %> </p>
+          <p class="card-text">Lesson Type: <%=  match.kind %> </p>
+          <p class="card-text">Date: <%=  match.date %> </p>
+          <p class="card-text">Time: <%=  match.time %> </p>
+          <form action="/booking" method="post">
+            <input type="hidden" name="selectedID" value="<%=  match._id%>">
+            <input class="btn btn-dark" type="submit" value="book!">
+          </form>
+
+        </div>
+      </div>
+  </div>
+
+</div>
+
+<%- include("footer") -%>

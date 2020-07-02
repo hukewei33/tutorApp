@@ -1,0 +1,44 @@
+<%- include("header") -%>
+<%- include("loginNav") -%>
+
+<h1>Update information</h1>
+<div class="container">
+  <form class="" action="/update" method="post">
+    <fieldset>
+      <legend>Tell us about you!</legend>
+
+        <div class="form-group col-md-4">
+          <label>nick name</label>
+          <input type="text" name="nickName" value="" required>
+        </div>
+
+        <div class="form-group col-md-4">
+        <label>Age</label>
+        <input type="number" name="age" value="" requires>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label >Gender</label>
+          <select class="form-control custom-select" name="gender" required >
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Failure">Failure</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label >School</label>
+          <select id="inputKind" class="form-control custom-select" name="school" required >
+            <option value="Raffles">Raffles</option>
+            <option value="stupid">Stupid</option>
+          </select>
+        </div>
+
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">Submit!</button>
+  </form>
+</div>
+
+
+<%- include("footer") -%>

@@ -47,10 +47,12 @@ const offerSchema = {
   kind: [String],
   time: String,
   date: String,
-  tutorID: String
+  tutorID: String,
+  studentID: String
 }
 
 const Offer = mongoose.model("offer", offerSchema);
+const Match = mongoose.model("match", offerSchema);
 
 
 const accountInfoSchema = {
@@ -119,6 +121,8 @@ app.post("/login", function(req, res) {
 
 });
 
+
+
 app.get("/register", function(req, res) {
   res.render("register");
 });
@@ -157,7 +161,7 @@ app.post("/register", function(req, res) {
           //add cookies
           res.cookie("userData", users);
           passport.authenticate("local")(req, res, function() {
-            res.redirect("/home");
+            res.redirect("/update");
           });
         }
       });
@@ -177,20 +181,40 @@ app.get("/logout", function(req, res) {
 
 app.get("/home", function(req, res) {
   if (req.isAuthenticated()) {
-    console.log(req.cookies.userData.userid);
     res.render("home");
   } else {
     res.redirect("/login");
   }
 });
 
+app.get("/update", function(req, res) {
+  if (req.isAuthenticated()) {
+    res.render("update");
+  } else {
+    res.redirect("/login");
+  }
+});
+
+app.post("/update",function(req,res){
+  const nickName = req.body.nickName;
+  const age = req.body.age;
+  const gender = req.body.gender;
+  const school = req.body.school;
+ Account.findOne({email:req.cookies.userData.userid},function(err,result){
+   if(err)console.log(err);
+   result.nickName = nickName;
+   result.age = age;
+   result.gender = gender;
+   result.school = school;
+   result.save();
+   res.redirect("/home");
+ });
+
+});
+
 app.get("/tutors", function(req, res) {
   if (req.isAuthenticated()) {
-    console.log("going to tutors page");
-    console.log(req.cookies.userData.userid);
-    res.render("tutors", {
-      tid: req.cookies.userData.userid
-    });
+    res.render("tutors");
   } else {
     res.redirect("/login");
   }
@@ -202,7 +226,7 @@ app.post("/tutors", function(req, res) {
   var kindRequested = req.body.kind;
   const dateRequested = req.body.date;
   var timeRequested = req.body.time;
-  const tutorID = req.body.tutorID;
+  const tutorID = req.cookies.userData.userid;
 
   console.log(req.body);
   console.log(typeof dateRequested);
@@ -227,7 +251,8 @@ app.post("/tutors", function(req, res) {
       kind: kindRequested,
       date: dateRequested,
       time: timeSlot,
-      tutorID: tutorID
+      tutorID: tutorID,
+      studentID: "null"
     });
     newOffer.save();
   })
@@ -304,38 +329,86 @@ app.post("/students", function(req, res) {
 
 
 app.get("/account", function(req, res) {
-  if (req.isAuthenticated()) {
-    //make list of jobs
-    const userID = req.cookies.userData.userid;
-    console.log("the user id used in search is"+userID);
-    //find list of jobs
-    Offer.find({tutorID:userID}, function(err, jobs) {
-      if (err) console.log(err);
-      else {
-        console.log(jobs);
-        Account.findOne({email: userID}, function(err, accountInfo) {
+      if (req.isAuthenticated()) {
+        const userID = req.cookies.userData.userid;
+        //find list of jobs
+        Offer.find({tutorID: userID}, function(err, jobs) {
+            if (err) console.log(err);
+            //find user account info
+            Account.findOne({email: userID}, function(err, accountInfo) {
+                if (err) console.log(err);
+                Match.find({tutorID: userID}, function(err, matches) {
+                    if (err) console.log(err);
+                    Match.find({studentID: userID}, function(err, lessons) {
+                      if (err) console.log(err);
+                      res.render("account", {
+                        accInfo: accountInfo,
+                        jobInfo: jobs,
+                        matchInfo: matches,
+                        lessonInfo: lessons
+                      });
+                    });
+                  });
+                });
+            });
+        }
+        else {
+          res.redirect("/login");
+        }
+      });
+
+
+    app.post("/view", function(req, res) {
+      if (req.isAuthenticated()) {
+        const selectedID = req.body.selectedID;
+        Offer.findById(selectedID, function(err, result) {
           if (err) console.log(err);
           else {
-            console.log(jobs);
-            res.render("account", {
-              accInfo: accountInfo,
-              jobInfo: jobs
+            console.log(result);
+            res.render("view", {
+              match: result
             });
           }
         });
+      } else {
+        res.redirect("/login");
       }
     });
-  } else {
-    res.redirect("/login");
-  }
-});
+
+    app.post("/booking", function(req, res) {
+      if (req.isAuthenticated()) {
+        const selectedID = req.body.selectedID;
+        const userID = req.cookies.userData.userid;
+
+        Offer.findById(selectedID, function(err, findRes) {
+          if (err) console.log(err);
+          //update student info
+          findRes.studentID = userID;
+          findRes.save();
+          //remove from Offer collection
+          //put in Match collection
+          let swap = new(mongoose.model('match'))(findRes);
+          swap._id = mongoose.Types.ObjectId();
+          swap.isNew = true;
+          swap.save();
+        });
+
+        Offer.findById(selectedID, function(err, findRes) {
+          if (err) console.log(err);
+          findRes.remove();
+        });
+        res.redirect("/students");
+      } else {
+        res.redirect("/login");
+      }
+    });
 
 
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 3000;
-}
 
-app.listen(port, function() {
-  console.log("Server started on port 3000");
-});
+    let port = process.env.PORT;
+    if (port == null || port == "") {
+      port = 3000;
+    }
+    app.listen(port, function() {
+      console.log("Server started on port 3000");
+    });
