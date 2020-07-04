@@ -12,7 +12,7 @@
   <p>school: <%= accInfo.school %></p>
   <p>credits: <%= accInfo.credits %></p>
 
-<a class="btn btn-primary" href="/update" role="button">Update you info now!</a>
+<a class="btn btn-primary" href="/update" role="button">Update your info now!</a>
 
 </div>
 <div class="container">
@@ -46,6 +46,12 @@
         <p class="card-text">Lesson Type: <%=  match.kind %> </p>
         <p class="card-text">Date: <%=  match.date %> </p>
         <p class="card-text">Time: <%=  match.time %> </p>
+        <form class="" action="/submitLink" method="post">
+          <label >Zoom Link</label>
+          <input type="text" name="zoomLink" value="<%= match.zoomLink %>">
+          <input type="hidden" name="matchID" value="<%= match._id %>">
+            <button type="submit" class="btn btn-primary">Update zoom link!</button>
+        </form>
       </div>
     </div>
   <%});%>
@@ -63,6 +69,9 @@
         <p class="card-text">Lesson Type: <%=  match.kind %> </p>
         <p class="card-text">Date: <%=  match.date %> </p>
         <p class="card-text">Time: <%=  match.time %> </p>
+        <%if(match.zoomLink != "Update Now"){%>
+          <a href="https:<%= match.zoomLink %>" class="btn btn-primary">zoom link</a>
+        <%}%>
       </div>
     </div>
   <%});%>

@@ -11,7 +11,7 @@ const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 var cookieParser = require('cookie-parser');
 const nodeMailer = require('nodemailer');
-
+var cron = require('node-cron');
 
 
 
@@ -52,7 +52,8 @@ const offerSchema = {
   date: String,
   tutorID: String,
   studentID: String,
-  tutorNickName:String
+  tutorNickName:String,
+  zoomLink:String
 }
 //create model for offer and match ------------------------------------------------------------------------------------------------------------------------
 const Offer = mongoose.model("offer", offerSchema);
@@ -260,17 +261,14 @@ app.post("/tutors", function(req, res) {
       if (typeof timeRequested === "string") {
         timeRequested = [req.body.time];
       }
+      //make sure that bith variables are lists
       if (typeof levelRequested === 'string') {
-        console.log("single levels");
         levelRequested = [req.body.levels];
       }
       if (typeof kindRequested === 'string') {
-        console.log("single kind");
         kindRequested = [req.body.kind];
       }
       const tutorNickName = tutorAccount.nickName;
-      console.log(tutorAccount);
-      console.log(tutorNickName);
       timeRequested.forEach(function(timeSlot) {
         var newOffer = new Offer({
           subject: subjectRequested,
@@ -280,10 +278,15 @@ app.post("/tutors", function(req, res) {
           time: timeSlot,
           tutorID: tutorID,
           studentID: "null",
-          tutorNickName:tutorNickName
+          tutorNickName:tutorNickName,
+          zoomLink:"Update Now"
         });
-        //console.log(newOffer);
         newOffer.save();
+        //experiment with cron
+        var task = cron.schedule('*/10 * * * * *',function(){
+          console.log("running cron for "+ tutorAccount.nickName);
+          task.destroy();
+        })
       })
 
       res.redirect("/tutors");
@@ -431,7 +434,6 @@ app.post("/booking", function(req, res) {
       //update student info
       findRes.studentID = userID;
       findRes.save();
-      //remove from Offer collection
       //put in Match collection
       let swap = new(mongoose.model('match'))(findRes);
       swap._id = mongoose.Types.ObjectId();
@@ -450,7 +452,7 @@ app.post("/booking", function(req, res) {
         from:'instanttutorsreminder@gmail.com',
         to:findRes.tutorID,
         subject:'You have a new job!',
-        text:"it works",
+        text:"new job",
         html:outPut
       };
 
@@ -462,26 +464,23 @@ app.post("/booking", function(req, res) {
       Account.findOne({email:userID},function(err,studentAccount){
         if(err)console.log(err);
         var oldAmount1 = studentAccount.credits;
-        console.log(oldAmount1);
         studentAccount.credits = oldAmount1-1;
-        console.log("new student credit amount "+studentAccount.credits);
         studentAccount.save();
         Account.findOne({email:findRes.tutorID},function(err,tutorAccount){
           if(err)console.log(err);
           var oldAmount2 = tutorAccount.credits;
-          console.log(oldAmount2);
           tutorAccount.credits = oldAmount2+1;
-          console.log("new tutor credit amount "+tutorAccount.credits);
           tutorAccount.save();
         });
       });
-    });
-
-    Offer.findById(selectedID, function(err, findRes) {
-      if (err) console.log(err);
-      //remove the old offer from db
       findRes.remove();
     });
+
+    // Offer.findById(selectedID, function(err, findRes) {
+    //   if (err) console.log(err);
+    //   //remove the old offer from db
+    //   findRes.remove();
+    // });
     res.redirect("/students");
   } else {
     res.redirect("/login");
@@ -489,7 +488,22 @@ app.post("/booking", function(req, res) {
 });
 
 
+//submission of links -------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------
+app.post("/submitLink",function(req,res){
+  const zoomLink = req.body.zoomLink;
+  const matchID = req.body.matchID;
+  Match.findById(matchID,function(err,result){
+    if(err) console.log(err);
+    result.zoomLink = zoomLink;
+    result.save();
+  });
+  res.redirect("/account");
+});
 
+
+//start listening at ports -------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------
 
 
 let port = process.env.PORT;
