@@ -58,16 +58,19 @@ const offerSchema = {
 //create model for offer and match ------------------------------------------------------------------------------------------------------------------------
 const Offer = mongoose.model("offer", offerSchema);
 const Match = mongoose.model("match", offerSchema);
+const Fulfil = mongoose.model("fulfill", offerSchema);
 //make schema for accountInfo ------------------------------------------------------------------------------------------------------------------------
 
-const accountInfoSchema = {
+
+const accountInfoSchema = new mongoose.Schema({
   email: String,
   nickName: String,
   age: String,
   gender: String,
   school: String,
-  credits: Number
-}
+  credits: Number,
+  reviews:[]
+});
 //create model for acountInfo ------------------------------------------------------------------------------------------------------------------------
 const Account = mongoose.model("account", accountInfoSchema);
 //create schema for login details ------------------------------------------------------------------------------------------------------------------------
@@ -283,6 +286,10 @@ app.post("/tutors", function(req, res) {
         });
         newOffer.save();
         //experiment with cron
+        //to implement:
+        //require check in at scheduled time?
+        //move auto move from unmatched to expired unmatch DB
+        //
         var task = cron.schedule('*/10 * * * * *',function(){
           console.log("running cron for "+ tutorAccount.nickName);
           task.destroy();
@@ -378,19 +385,31 @@ app.get("/account", function(req, res) {
         email: userID
       }, function(err, accountInfo) {
         if (err) console.log(err);
+        //find list of matched job offers
         Match.find({
           tutorID: userID
         }, function(err, matches) {
           if (err) console.log(err);
+          //find list of accepted lessons
           Match.find({
             studentID: userID
           }, function(err, lessons) {
             if (err) console.log(err);
-            res.render("account", {
-              accInfo: accountInfo,
-              jobInfo: jobs,
-              matchInfo: matches,
-              lessonInfo: lessons
+            //find list of past matches
+            Fulfil.find({tutorID: userID},function(err,pastMatches){
+              if (err) console.log(err);
+              //find list of past lessons
+              Fulfil.find({studentID: userID},function(err,pastLessons){
+                if (err) console.log(err);
+                res.render("account", {
+                  accInfo: accountInfo,
+                  jobInfo: jobs,
+                  matchInfo: matches,
+                  lessonInfo: lessons,
+                  pastMatchInfo: pastMatches,
+                  pastLessonInfo: pastLessons
+                });
+              });
             });
           });
         });
@@ -501,6 +520,67 @@ app.post("/submitLink",function(req,res){
   res.redirect("/account");
 });
 
+
+//submission of review -------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------
+app.post("/review",function(req,res){
+  const revieweeID = req.body.revieweeID;
+  res.render("review",{
+    revieweeID:revieweeID
+  });
+});
+
+
+//update of review -------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------
+app.post("/newReview",function(req,res){
+  const userID = req.cookies.userData.userid;
+  const revieweeID = req.body.revieweeID;
+  const userRating = req.body.userRating;
+  const userReview = req.body.userReview;
+  //make the review object
+  var newReview = {
+    rating:userRating,
+    reviewer:userID,
+    review:userReview
+  };
+  Account.findOne({email:revieweeID},function(err,reviewee){
+    if(err)console.log(err);
+    var tmpArray = reviewee.reviews;
+    tmpArray.push(newReview);
+    reviewee.reviews = tmpArray;
+    reviewee.save();
+    console.log("review updated");
+  });
+  res.redirect("/account");
+});
+
+
+
+// update log prediodically-------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------
+cron.schedule('* */1 * * *', () => {
+  console.log('running a task every hour');
+  var now = new Date();
+  Match.find({},function(err,matchList){
+    matchList.forEach(function(elem){
+      var dateString = elem.date;
+      var timeString = elem.time;
+      //set to gmt +8 for singapore time
+      var d = new Date(dateString+"T"+timeString+"+08:00");
+      console.log(d);
+      //move matches that have passed into furfill DB
+      if(d<now){
+        let swap = new(mongoose.model('fulfill'))(elem);
+        swap._id = mongoose.Types.ObjectId();
+        swap.isNew = true;
+        swap.save();
+        elem.remove();
+      }
+
+    });
+  });
+});
 
 //start listening at ports -------------------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------

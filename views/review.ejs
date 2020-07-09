@@ -1,0 +1,29 @@
+<%- include("header") -%>
+<%- include("loginNav") -%>
+
+<h1>Review for: <%=revieweeID%></h1>
+<div class="container">
+  <form class="" action="/newReview" method="post">
+    <fieldset>
+      <legend>Tell us about this user!</legend>
+
+        <div class="form-group col-md-4">
+        <label>Rating</label>
+        <input type="number" name="userRating" value="" min="1" max="5" requires>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="userReview">Review of User</label>
+
+        <textarea id="userReview" name="userReview" rows="4" cols="50">tell us more!</textarea>
+        </div>
+        <input type="hidden" name="revieweeID" value="<%=revieweeID%>">
+
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">Submit!</button>
+  </form>
+</div>
+
+
+<%- include("footer") -%>

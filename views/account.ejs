@@ -46,10 +46,12 @@
         <p class="card-text">Lesson Type: <%=  match.kind %> </p>
         <p class="card-text">Date: <%=  match.date %> </p>
         <p class="card-text">Time: <%=  match.time %> </p>
-        <form class="" action="/submitLink" method="post">
-          <label >Zoom Link</label>
-          <input type="text" name="zoomLink" value="<%= match.zoomLink %>">
-          <input type="hidden" name="matchID" value="<%= match._id %>">
+        <form action="/submitLink" method="post">
+          <div class="form-group">
+            <label for="zoomLinkInput">Zoom Link</label>
+            <input id = "zoomLinkInput" class="form-control" type="text" name="zoomLink" value="<%= match.zoomLink %>">
+            <input type="hidden" name="matchID" value="<%= match._id %>">
+          </div>
             <button type="submit" class="btn btn-primary">Update zoom link!</button>
         </form>
       </div>
@@ -76,6 +78,67 @@
     </div>
   <%});%>
 </div>
+
+<h1>past matches</h1>
+<div class="card-group">
+  <% pastMatchInfo.forEach(function(match){ %>
+    <div class="card text-white bg-warning  mb-3" style="width: 18rem;">
+      <div class="card-header ">Tutor Name <%=match.tutorNickName%></div>
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 ">Match details</h6>
+        <p class="card-text">Subject: <%=  match.subject %> </p>
+        <p class="card-text">Level: <%=  match.level %> </p>
+        <p class="card-text">Lesson Type: <%=  match.kind %> </p>
+        <p class="card-text">Date: <%=  match.date %> </p>
+        <p class="card-text">Time: <%=  match.time %> </p>
+        <form action="/review" method="post">
+            <input type="hidden" name="revieweeID" value="<%= match.studentID %>">
+            <button type="submit" class="btn btn-primary">Review Student</button>
+        </form>
+      </div>
+    </div>
+  <%});%>
+</div>
+
+<h1>past lessons</h1>
+<div class="card-group">
+  <% pastLessonInfo.forEach(function(match){ %>
+    <div class="card text-white bg-warning  mb-3" style="width: 18rem;">
+      <div class="card-header ">Tutor Name <%=match.tutorNickName%></div>
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 ">Match details</h6>
+        <p class="card-text">Subject: <%=  match.subject %> </p>
+        <p class="card-text">Level: <%=  match.level %> </p>
+        <p class="card-text">Lesson Type: <%=  match.kind %> </p>
+        <p class="card-text">Date: <%=  match.date %> </p>
+        <p class="card-text">Time: <%=  match.time %> </p>
+        <form action="/review" method="post">
+            <input type="hidden" name="revieweeID" value="<%= match.tutorID %>">
+            <button type="submit" class="btn btn-primary">Review Tutor</button>
+        </form>
+      </div>
+    </div>
+  <%});%>
+</div>
+
+
+<h1>Reviews</h1>
+
+<% accInfo.reviews.forEach(function(review){ %>
+  <div class="card text-white bg-success  mb-3" style="width: 18rem;">
+    <div class="card-header ">Reviewer Name <%= review.reviewer %> </div>
+    <div class="card-body">
+      <h6 class="card-subtitle mb-2 ">Review</h6>
+      <p class="card-text">Rating: <%=review.rating%>/5 </p>
+      <p class="card-text">Review: <%=review.review%> </p>
+    </div>
+  </div>
+
+<%});%>
+
+
+
+
 
   <h1>new jobs</h1>
 
