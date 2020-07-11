@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <title>Alpha build</title>
+
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://checkout.stripe.com/checkout.js" defer></script>
+  <script> var stripePublicKey = "pk_test_51H3MFKA4JtVDzRhw2WJHOZEoZTsxpJMvOJs1Wz2aPgOY7T0ypuyieySQHUjAL0tH1eVROe4WeduVgIwuelPNUB6u000PADbnjL"</script>
+  <script src="buyCredit.js" defer></script>
+</head>
+
+<body>
+
+<%- include("loginNav") -%>
+
+
+<h1>buy credits </h1>
+<div class="container">
+  <div class="card-group">
+
+    <div class="card" style="width: 18rem;">
+      <img src="..." class="card-img-top" alt="credits">
+      <div class="card-body" data-item-id="1">
+        <span class="card-title">10 Credits</span>
+        <span class = "item-price">$10</span>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <button class="btn btn-primary shop-item-button" type="button">ADD TO CART</button>
+      </div>
+    </div>
+
+    <div class="card" style="width: 18rem;">
+      <img src="..." class="card-img-top" alt="credits">
+      <div class="card-body" data-item-id="2">
+        <span class="card-title">20 Credits</span>
+        <span class = "item-price">$15</span>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <button class="btn btn-primary shop-item-button" type="button">ADD TO CART</button>
+      </div>
+    </div>
+
+
+
+  </div>
+
+
+
+  <section class="container content-section">
+    <h2 class="section-header">CART</h2>
+    <div class="cart-row">
+      <span class="cart-item cart-header cart-column">ITEM</span>
+      <span class="cart-price cart-header cart-column">PRICE</span>
+      <span class="cart-quantity cart-header cart-column">QUANTITY</span>
+    </div>
+    <div class="cart-items">
+    </div>
+    <div class="cart-total">
+      <strong class="cart-total-title">Total</strong>
+      <span class="cart-total-price">$0</span>
+    </div>
+    <button class="btn btn-primary btn-purchase" type="button">PURCHASE</button>
+  </section>
+
+
+</div>
+
+
+<%- include("footer") -%>

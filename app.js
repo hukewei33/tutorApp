@@ -12,10 +12,12 @@ const passportLocalMongoose = require("passport-local-mongoose");
 var cookieParser = require('cookie-parser');
 const nodeMailer = require('nodemailer');
 var cron = require('node-cron');
-
+const fs = require('fs');
+const stripe = require('stripe')("sk_test_51H3MFKA4JtVDzRhwnBtxSGC9UwX4xQvj5ANvr9mOpiDWowkzvC3yOfY5H3akpGsusVAj5ybuPFV6ZTRaNO9JzhsH00sZsqEsRP");
 
 
 const app = express();
+app.use(express.json())
 //use ejs ------------------------------------------------------------------------------------------------------------------------
 app.set('view engine', 'ejs');
 //use cookies------------------------------------------------------------------------------------------------------------------------
@@ -554,6 +556,58 @@ app.post("/newReview",function(req,res){
   });
   res.redirect("/account");
 });
+
+//view -------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------
+
+app.get("/buyCredits", function(req, res) {
+  if (req.isAuthenticated()) {
+    res.render("buyCredits");
+  } else {
+    res.redirect("/login");
+  }
+});
+
+app.post('/buyCredits', function(req, res) {
+  let total = 0;
+  let totalCredit = 0;
+  console.log(req.body.items);
+  req.body.items.forEach(function(item) {
+    var i = item.id;
+    var q = item.quantity;
+    switch (i) {
+      case '1':
+        total = total + 1000*q;
+        totalCredit = totalCredit +10*q
+        break;
+      case '2':
+          total = total + 1500*q;
+          totalCredit = totalCredit +20*q
+          break;
+      default:
+        console.log("error id");
+    }
+  })
+  console.log("total is" + total)
+      stripe.charges.create({
+        amount: total,
+        source: req.body.stripeTokenId,
+        currency: 'sgd'
+      }).then(function() {
+        console.log('Charge Successful')
+        res.json({ message: 'Successfully purchased items' })
+        //update credits
+        Account.findOne({email:req.cookies.userData.userid},function(err,account){
+          if(err)console.log(err);
+          var oldAmount = account.credits;
+          account.credits = oldAmount+totalCredit;
+          account.save();
+        });
+      }).catch(function() {
+        console.log('Charge Fail')
+        res.status(500).end()
+      })
+})
 
 
 
