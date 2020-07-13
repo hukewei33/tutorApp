@@ -54,8 +54,9 @@ const offerSchema = {
   date: String,
   tutorID: String,
   studentID: String,
-  tutorNickName:String,
-  zoomLink:String
+  tutorNickName: String,
+  studentNickName:String,
+  zoomLink: String
 }
 //create model for offer and match ------------------------------------------------------------------------------------------------------------------------
 const Offer = mongoose.model("offer", offerSchema);
@@ -71,7 +72,7 @@ const accountInfoSchema = new mongoose.Schema({
   gender: String,
   school: String,
   credits: Number,
-  reviews:[]
+  reviews: []
 });
 //create model for acountInfo ------------------------------------------------------------------------------------------------------------------------
 const Account = mongoose.model("account", accountInfoSchema);
@@ -92,10 +93,10 @@ passport.deserializeUser(User.deserializeUser());
 //email intergration ------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------
 let transporter = nodeMailer.createTransport({
-  service:'gmail',
-  auth:{
-    user:'instanttutorsreminder@gmail.com',
-    pass:process.env.EMAIL_PW
+  service: 'gmail',
+  auth: {
+    user: 'instanttutorsreminder@gmail.com',
+    pass: process.env.EMAIL_PW
     //pass:'getTheBread'
   }
 });
@@ -124,10 +125,7 @@ app.post("/login", function(req, res) {
     username: req.body.username,
     password: req.body.password
   });
-  //make cookie
-  let users = {
-    userid: req.body.username
-  }
+
   req.login(user, function(err) {
     if (err) {
       // to do: handle incorrect login
@@ -135,13 +133,26 @@ app.post("/login", function(req, res) {
       console.log(err);
     } else {
       passport.authenticate("local")(req, res, function() {
-        //add cookies
-        res.cookie("userData", users);
-        res.redirect("/home");
+        //make cookies
+        Account.findOne({
+          email: req.body.username
+        }, function(err, result) {
+          if (err) console.log(err)
+          //make cookie
+          let users = {
+            userid: req.body.username,
+            userNickName: result.nickName
+          }
+          //add cookies
+          res.cookie("userData", users);
+          res.redirect("/home");
+        });
+
       });
     }
   });
 });
+
 //register page ------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------
 app.get("/register", function(req, res) {
@@ -181,6 +192,7 @@ app.post("/register", function(req, res) {
           }
           //add cookies
           res.cookie("userData", users);
+
           passport.authenticate("local")(req, res, function() {
             res.redirect("/update");
           });
@@ -207,6 +219,7 @@ app.get("/logout", function(req, res) {
 
 app.get("/home", function(req, res) {
   if (req.isAuthenticated()) {
+    console.log(req.cookies.userData.userid + req.cookies.userData.userNickName)
     res.render("home");
   } else {
     res.redirect("/login");
@@ -238,6 +251,15 @@ app.post("/update", function(req, res) {
     result.gender = gender;
     result.school = school;
     result.save();
+    //clear prev cookies
+    res.clearCookie("userData");
+    //make new cookies
+    let users = {
+      userid: req.cookies.userData.userid,
+      userNickName: req.body.nickName
+    }
+    //add cookies
+    res.cookie("userData", users);
     res.redirect("/home");
   });
 });
@@ -260,46 +282,47 @@ app.post("/tutors", function(req, res) {
   const dateRequested = req.body.date;
   var timeRequested = req.body.time;
   const tutorID = req.cookies.userData.userid;
+  const tutorNickName = req.cookies.userData.userNickName;
   //to do: intergrate tutor nickname into each offer
-  Account.findOne({email:tutorID},function(err,tutorAccount){
-    if(err)console.log(err);
-      if (typeof timeRequested === "string") {
-        timeRequested = [req.body.time];
-      }
-      //make sure that bith variables are lists
-      if (typeof levelRequested === 'string') {
-        levelRequested = [req.body.levels];
-      }
-      if (typeof kindRequested === 'string') {
-        kindRequested = [req.body.kind];
-      }
-      const tutorNickName = tutorAccount.nickName;
-      timeRequested.forEach(function(timeSlot) {
-        var newOffer = new Offer({
-          subject: subjectRequested,
-          level: levelRequested,
-          kind: kindRequested,
-          date: dateRequested,
-          time: timeSlot,
-          tutorID: tutorID,
-          studentID: "null",
-          tutorNickName:tutorNickName,
-          zoomLink:"Update Now"
-        });
-        newOffer.save();
-        //experiment with cron
-        //to implement:
-        //require check in at scheduled time?
-        //move auto move from unmatched to expired unmatch DB
-        //
-        var task = cron.schedule('*/10 * * * * *',function(){
-          console.log("running cron for "+ tutorAccount.nickName);
-          task.destroy();
-        })
-      })
 
-      res.redirect("/tutors");
-  });
+  if (typeof timeRequested === "string") {
+    timeRequested = [req.body.time];
+  }
+  //make sure that bith variables are lists
+  if (typeof levelRequested === 'string') {
+    levelRequested = [req.body.levels];
+  }
+  if (typeof kindRequested === 'string') {
+    kindRequested = [req.body.kind];
+  }
+
+  timeRequested.forEach(function(timeSlot) {
+    var newOffer = new Offer({
+      subject: subjectRequested,
+      level: levelRequested,
+      kind: kindRequested,
+      date: dateRequested,
+      time: timeSlot,
+      tutorID: tutorID,
+      studentID: "null",
+      tutorNickName: tutorNickName,
+      studentNickName:"null",
+      zoomLink: "Update Now"
+    });
+    newOffer.save();
+    //experiment with cron
+    //to implement:
+    //require check in at scheduled time?
+    //move auto move from unmatched to expired unmatch DB
+    //
+    var task = cron.schedule('*/10 * * * * *', function() {
+      console.log("running cron for " + tutorAccount.nickName);
+      task.destroy();
+    })
+  })
+
+  res.redirect("/tutors");
+
 
 });
 
@@ -377,6 +400,7 @@ app.post("/students", function(req, res) {
 app.get("/account", function(req, res) {
   if (req.isAuthenticated()) {
     const userID = req.cookies.userData.userid;
+    console.log("user ID used is " + userID)
     //find list of jobs
     Offer.find({
       tutorID: userID
@@ -398,11 +422,16 @@ app.get("/account", function(req, res) {
           }, function(err, lessons) {
             if (err) console.log(err);
             //find list of past matches
-            Fulfil.find({tutorID: userID},function(err,pastMatches){
+            Fulfil.find({
+              tutorID: userID
+            }, function(err, pastMatches) {
               if (err) console.log(err);
               //find list of past lessons
-              Fulfil.find({studentID: userID},function(err,pastLessons){
+              Fulfil.find({
+                studentID: userID
+              }, function(err, pastLessons) {
                 if (err) console.log(err);
+                console.log("accountInfo is " + accountInfo)
                 res.render("account", {
                   accInfo: accountInfo,
                   jobInfo: jobs,
@@ -449,11 +478,34 @@ app.post("/booking", function(req, res) {
   if (req.isAuthenticated()) {
     const selectedID = req.body.selectedID;
     const userID = req.cookies.userData.userid;
-
+    const userNickName = req.cookies.userData.userNickName;
     Offer.findById(selectedID, function(err, findRes) {
       if (err) console.log(err);
+      //conduct transaction of credits
+      Account.findOne({
+        email: userID
+      }, function(err, studentAccount) {
+        if (err) console.log(err);
+        var oldAmount1 = studentAccount.credits;
+        //student account has not enough buyCredits
+        if(oldAmount1<=1){
+          res.redirect("/buyCredits");
+        }
+        studentAccount.credits = oldAmount1 - 1;
+        studentAccount.save();
+        Account.findOne({
+          email: findRes.tutorID
+        }, function(err, tutorAccount) {
+          if (err) console.log(err);
+          var oldAmount2 = tutorAccount.credits;
+          tutorAccount.credits = oldAmount2 + 1;
+          tutorAccount.save();
+        });
+      });
+
       //update student info
       findRes.studentID = userID;
+      findRes.studentNickName = userNickName;
       findRes.save();
       //put in Match collection
       let swap = new(mongoose.model('match'))(findRes);
@@ -470,30 +522,18 @@ app.post("/booking", function(req, res) {
       </ul>
       `
       let mailOption = {
-        from:'instanttutorsreminder@gmail.com',
-        to:findRes.tutorID,
-        subject:'You have a new job!',
-        text:"new job",
-        html:outPut
+        from: 'instanttutorsreminder@gmail.com',
+        to: findRes.tutorID,
+        subject: 'You have a new job!',
+        text: "new job",
+        html: outPut
       };
 
-      transporter.sendMail(mailOption,function(err,data){
-        if(err)console.log(err);
+      transporter.sendMail(mailOption, function(err, data) {
+        if (err) console.log(err);
         else console.log("mail sent");
       });
-      //conduct transaction of credits
-      Account.findOne({email:userID},function(err,studentAccount){
-        if(err)console.log(err);
-        var oldAmount1 = studentAccount.credits;
-        studentAccount.credits = oldAmount1-1;
-        studentAccount.save();
-        Account.findOne({email:findRes.tutorID},function(err,tutorAccount){
-          if(err)console.log(err);
-          var oldAmount2 = tutorAccount.credits;
-          tutorAccount.credits = oldAmount2+1;
-          tutorAccount.save();
-        });
-      });
+
       findRes.remove();
     });
 
@@ -511,11 +551,11 @@ app.post("/booking", function(req, res) {
 
 //submission of links -------------------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------
-app.post("/submitLink",function(req,res){
+app.post("/submitLink", function(req, res) {
   const zoomLink = req.body.zoomLink;
   const matchID = req.body.matchID;
-  Match.findById(matchID,function(err,result){
-    if(err) console.log(err);
+  Match.findById(matchID, function(err, result) {
+    if (err) console.log(err);
     result.zoomLink = zoomLink;
     result.save();
   });
@@ -525,29 +565,33 @@ app.post("/submitLink",function(req,res){
 
 //submission of review -------------------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------
-app.post("/review",function(req,res){
+app.post("/review", function(req, res) {
   const revieweeID = req.body.revieweeID;
-  res.render("review",{
-    revieweeID:revieweeID
+  res.render("review", {
+    revieweeID: revieweeID
   });
 });
 
 
 //update of review -------------------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------
-app.post("/newReview",function(req,res){
+app.post("/newReview", function(req, res) {
   const userID = req.cookies.userData.userid;
+  const userNickName = req.cookies.userData.userNickName;
   const revieweeID = req.body.revieweeID;
   const userRating = req.body.userRating;
   const userReview = req.body.userReview;
   //make the review object
   var newReview = {
-    rating:userRating,
-    reviewer:userID,
-    review:userReview
+    rating: userRating,
+    reviewer: userID,
+    reviewerName:userNickName,
+    review: userReview
   };
-  Account.findOne({email:revieweeID},function(err,reviewee){
-    if(err)console.log(err);
+  Account.findOne({
+    email: revieweeID
+  }, function(err, reviewee) {
+    if (err) console.log(err);
     var tmpArray = reviewee.reviews;
     tmpArray.push(newReview);
     reviewee.reviews = tmpArray;
@@ -577,54 +621,58 @@ app.post('/buyCredits', function(req, res) {
     var q = item.quantity;
     switch (i) {
       case '1':
-        total = total + 1000*q;
-        totalCredit = totalCredit +10*q
+        total = total + 1000 * q;
+        totalCredit = totalCredit + 10 * q
         break;
       case '2':
-          total = total + 1500*q;
-          totalCredit = totalCredit +20*q
-          break;
+        total = total + 1500 * q;
+        totalCredit = totalCredit + 20 * q
+        break;
       default:
         console.log("error id");
     }
   })
   console.log("total is" + total)
-      stripe.charges.create({
-        amount: total,
-        source: req.body.stripeTokenId,
-        currency: 'sgd'
-      }).then(function() {
-        console.log('Charge Successful')
-        res.json({ message: 'Successfully purchased items' })
-        //update credits
-        Account.findOne({email:req.cookies.userData.userid},function(err,account){
-          if(err)console.log(err);
-          var oldAmount = account.credits;
-          account.credits = oldAmount+totalCredit;
-          account.save();
-        });
-      }).catch(function() {
-        console.log('Charge Fail')
-        res.status(500).end()
-      })
+  stripe.charges.create({
+    amount: total,
+    source: req.body.stripeTokenId,
+    currency: 'sgd'
+  }).then(function() {
+    console.log('Charge Successful')
+    res.json({
+      message: 'Successfully purchased items'
+    })
+    //update credits
+    Account.findOne({
+      email: req.cookies.userData.userid
+    }, function(err, account) {
+      if (err) console.log(err);
+      var oldAmount = account.credits;
+      account.credits = oldAmount + totalCredit;
+      account.save();
+    });
+  }).catch(function() {
+    console.log('Charge Fail')
+    res.status(500).end()
+  })
 })
 
 
 
 // update log prediodically-------------------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------
-cron.schedule('* */1 * * *', () => {
+cron.schedule('* */30 * * *', () => {
   console.log('running a task every hour');
   var now = new Date();
-  Match.find({},function(err,matchList){
-    matchList.forEach(function(elem){
+  Match.find({}, function(err, matchList) {
+    matchList.forEach(function(elem) {
       var dateString = elem.date;
       var timeString = elem.time;
       //set to gmt +8 for singapore time
-      var d = new Date(dateString+"T"+timeString+"+08:00");
+      var d = new Date(dateString + "T" + timeString + "+08:00");
       console.log(d);
       //move matches that have passed into furfill DB
-      if(d<now){
+      if (d < now) {
         let swap = new(mongoose.model('fulfill'))(elem);
         swap._id = mongoose.Types.ObjectId();
         swap.isNew = true;

@@ -38,7 +38,7 @@
 <div class="card-group">
   <% matchInfo.forEach(function(match){ %>
     <div class="card text-white bg-success  mb-3" style="width: 18rem;">
-      <div class="card-header ">Tutor Name <%=match.tutorNickName%></div>
+      <div class="card-header ">Student Name <%=match.studentNickName%></div>
       <div class="card-body">
         <h6 class="card-subtitle mb-2 ">Match details</h6>
         <p class="card-text">Subject: <%=  match.subject %> </p>
@@ -72,7 +72,7 @@
         <p class="card-text">Date: <%=  match.date %> </p>
         <p class="card-text">Time: <%=  match.time %> </p>
         <%if(match.zoomLink != "Update Now"){%>
-          <a href="https:<%= match.zoomLink %>" class="btn btn-primary">zoom link</a>
+          <a href="<%= match.zoomLink %>" class="btn btn-primary">zoom link</a>
         <%}%>
       </div>
     </div>
@@ -83,7 +83,7 @@
 <div class="card-group">
   <% pastMatchInfo.forEach(function(match){ %>
     <div class="card text-white bg-warning  mb-3" style="width: 18rem;">
-      <div class="card-header ">Tutor Name <%=match.tutorNickName%></div>
+      <div class="card-header ">Student Name <%=match.studentNickName%></div>
       <div class="card-body">
         <h6 class="card-subtitle mb-2 ">Match details</h6>
         <p class="card-text">Subject: <%=  match.subject %> </p>
@@ -126,7 +126,7 @@
 
 <% accInfo.reviews.forEach(function(review){ %>
   <div class="card text-white bg-success  mb-3" style="width: 18rem;">
-    <div class="card-header ">Reviewer Name <%= review.reviewer %> </div>
+    <div class="card-header ">Reviewer Name <%= review.reviewerName %> </div>
     <div class="card-body">
       <h6 class="card-subtitle mb-2 ">Review</h6>
       <p class="card-text">Rating: <%=review.rating%>/5 </p>
