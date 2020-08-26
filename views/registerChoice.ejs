@@ -1,24 +1,31 @@
 <%- include("header") -%>
-<%- include("loginNav") -%>
+<%- include("basicNavUpdate") -%>
+<h1>Choose account type</h1>
 <div class="container">
-  <div class="row align-items-center">
+  <div class="row justify-content-center align-items-start">
     <div class="col col-lg-6 my-auto">
-      <div class="card" style="width: 70%; margin:auto;">
+      <div class="card index-card" style="width: 70%; margin:auto;">
         <img src="images/teacher.png" class="card-img-top index-pic" alt="...">
         <div class="card-body">
           <h5 class="card-title">Tutors</h5>
           <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas porttitor posuere velit, nec finibus sem sodales eget. Donec ac commodo diam. In eget ligula eget nisi venenatis eleifend. Cras quis metus leo. Mauris sit amet nulla est. Sed dictum sem leo, et convallis arcu pellentesque id. Curabitur et sem lorem. Aenean odio odio, ornare vel mattis ut</p>
-          <a href="/tutors" class="btn btn-primary">Teach Now!</a>
+          <form  action="/registerChoice" method="post">
+            <input type="hidden" name="accountType" value="tutor">
+            <input class="btn btn-primary" type="submit" value="Sign Up as a Tutor!">
+          </form>
         </div>
       </div>
     </div>
     <div class="col col-lg-6 my-auto">
-      <div class="card" style="width: 70%;margin:auto;">
+      <div class="card index-card" style="width: 70%;margin:auto;">
         <img src="images/book.png" class="card-img-top index-pic" alt="...">
         <div class="card-body">
           <h5 class="card-title">Students</h5>
           <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas porttitor posuere velit, nec finibus sem sodales eget. Donec ac commodo diam. In eget ligula eget nisi venenatis eleifend. Cras quis metus leo. Mauris sit amet nulla est. Sed dictum sem leo, et convallis arcu pellentesque id. Curabitur et sem lorem. Aenean odio odio, ornare vel mattis ut</p>
-          <a href="/students" class="btn btn-primary">Book a Session!</a>
+          <form  action="/registerChoice" method="post">
+            <input type="hidden" name="accountType" value="student">
+            <input class="btn btn-primary" type="submit" value="Sign Up as a Student!">
+          </form>
         </div>
       </div>
     </div>
@@ -30,8 +37,5 @@
   <br>
   Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
 </p>
-
-
-
 
 <%- include("footer") -%>

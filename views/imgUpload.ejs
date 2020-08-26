@@ -1,0 +1,24 @@
+<%- include("header") -%>
+<%- include("basicNavUpdate") -%>
+
+	<h1>Upload Profile Picture to continue</h1>
+	<hr>
+	<div>
+		<form action="/imgUpload" method="POST" enctype="multipart/form-data">
+
+			<div>
+				<label for="image">Upload Image</label>
+				<input type="file" id="image"
+					name="image" value="" required>
+			</div>
+			<div>
+				<button type="submit">Submit</button>
+			</div>
+		</form>
+	</div>
+
+	<hr>
+
+
+
+<%- include("footer") -%>

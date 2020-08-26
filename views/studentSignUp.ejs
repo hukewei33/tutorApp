@@ -1,0 +1,50 @@
+<%- include("header") -%>
+<%- include("basicNavUpdate") -%>
+
+<h1>Update Student information</h1>
+<div class="container">
+  <div class="row justify-content-center align-items-end">
+    <div class="col col-lg-6 my-auto">
+      <div class="card index-card">
+        <div class="card-body">
+          <h5 class="card-title">Tell us about your schooling!</h5>
+          <form class="" action="/studentSignUp" method="post">
+            <fieldset>
+                <div class="form-group col-md-4">
+                  <label for="schoolName">Current School</label>
+                  <input type="text" class = "form-control"name="schoolName" value="" required>
+                </div>
+
+
+                <div class="form-group col-md-4">
+                  <label for="schoolYear">Current School Year</label>
+                  <select class="form-control custom-select" name="schoolYear" required >
+                    <option value='1'>Pri 1</option>
+                    <option value='2'>Pri 2</option>
+                    <option value='3'>Pri 3</option>
+                    <option value='4'>Pri 4</option>
+                    <option value='5'>Pri 5</option>
+                    <option value='6'>Pri 6</option>
+                    <option value='7'>Sec 1</option>
+                    <option value='8'>Sec 2</option>
+                    <option value='9'>Sec 3</option>
+                    <option value='10'>Sec 4</option>
+                    <option value='11'>JC 1</option>
+                    <option value='12'>JC 2</option>
+                    <option value='13'>IB</option>
+                  </select>
+                </div>
+            </fieldset>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+
+<%- include("footer") -%>

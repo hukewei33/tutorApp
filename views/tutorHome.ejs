@@ -1,0 +1,395 @@
+<%- include("header") -%>
+<%- include("basicNav") -%>
+
+<div class="container">
+<h1>tutors home</h1>
+
+<div class="row">
+  <div class="col-10">
+    <% var jobInfo = jobsLists.jobInfo %>
+    <% var arrayLength = jobInfo.length %>
+    <% var newJob; %>
+    <% var i; %>
+    <% var widthPercent = 100;%>
+
+    <h2>you have <%= arrayLength%> jobs offers</h2>
+
+
+    <div id="carouselExampleControls" class="carousel slide" data-interval="false">
+
+      <div class="carousel-inner">
+        <%if(arrayLength!=0){ %>
+        <div class="carousel-item active">
+
+            <%var firstIndex = Math.min(4,arrayLength) %>
+            <%if(arrayLength<4)widthPercent = widthPercent*(arrayLength/4);%>
+            <% for(i = 0;i<firstIndex;i++){ %>
+            <% newJob = jobInfo[i]; %>
+            <%if(i==0){%>
+              <div class="card-deck" style="width: <%=widthPercent%>%">
+            <%}%>
+            <div class="card text-white index-card  mb-3" style="width: 18rem;">
+              <div class="card-header ">Tutor Name <%=newJob.tutorName%></div>
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 ">Match details</h6>
+                <p class="card-text">Subject: <%=  newJob.subject %> </p>
+                <p class="card-text">Level: <%=  newJob.level %> </p>
+                <p class="card-text">Lesson Type: <%=  newJob.kind %> </p>
+                <p class="card-text">Date: <%=  newJob.date %> </p>
+                <p class="card-text">Time: <%=  newJob.time %> </p>
+              </div>
+            </div>
+
+            <%} %>
+
+          </div>
+        </div>
+        <%} %>
+
+        <%if(arrayLength>=4){ %>
+        <% for(i = 4;i<arrayLength;i++){ %>
+        <% newJob = jobInfo[i]; %>
+
+        <%if(i%4==0){%>
+        <%if(arrayLength-i<4)widthPercent = widthPercent*((arrayLength-i)/4);%>
+        <div class="carousel-item">
+          <div class="card-deck" style="width: <%=widthPercent%>%;">
+            <%}%>
+
+      <div class="card text-white index-card  mb-3" style="width: 18rem;">
+        <div class="card-header ">Tutor Name <%=newJob.tutorName%></div>
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2 ">Match details</h6>
+            <p class="card-text">Subject: <%=  newJob.subject %> </p>
+            <p class="card-text">Level: <%=  newJob.level %> </p>
+            <p class="card-text">Lesson Type: <%=  newJob.kind %> </p>
+            <p class="card-text">Date: <%=  newJob.date %> </p>
+            <p class="card-text">Time: <%=  newJob.time %> </p>
+          </div>
+        </div>
+
+        <% if(i%4==3||i==(arrayLength-1)){%>
+      </div>
+    </div>
+    <%}%>
+    <%}} %>
+
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+  </div>
+  </div>
+  <div class="col-2">
+    <div class="card index-card" style="width: 70%; margin:auto;">
+      <img src="images/teacher.png" class="card-img-top index-pic" alt="...">
+      <div class="card-body">
+        <a href="/tutors" class="btn btn-primary">Teach Now!</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-10">
+    <% jobInfo = jobsLists.matchInfo %>
+    <% arrayLength = jobInfo.length %>
+
+    <% widthPercent = 100;%>
+
+    <h2>you have <%= arrayLength%> upcoming jobs</h2>
+
+
+    <div id="carouselExampleControls1" class="carousel slide" data-interval="false">
+
+      <div class="carousel-inner">
+        <%if(arrayLength!=0){ %>
+        <div class="carousel-item active">
+
+            <%var firstIndex = Math.min(4,arrayLength) %>
+            <%if(arrayLength<4)widthPercent = widthPercent*(arrayLength/4);%>
+            <% for(i = 0;i<firstIndex;i++){ %>
+            <% newJob = jobInfo[i]; %>
+            <%if(i==0){%>
+              <div class="card-deck" style="width: <%=widthPercent%>%;">
+            <%}%>
+            <div class="card text-white index-card  mb-3" style="width: 18rem;">
+              <div class="card-header ">
+                <a href="acc/<%=newJob.studentID%>" style = "position:relative; z-index :1000;">Student Name <%=newJob.studentName%></a>
+                <img src="data:image/<%=newJob.studentImg.contentType%>;base64,
+                  <%=newJob.studentImg.data.toString('base64')%>" >
+                </div>
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 ">Match details</h6>
+                <p class="card-text">Subject: <%=  newJob.subject %> </p>
+                <p class="card-text">Level: <%=  newJob.studentLevel %> </p>
+                <p class="card-text">Lesson Type: <%=  newJob.kind %> </p>
+                <p class="card-text">Date: <%=  newJob.date %> </p>
+                <p class="card-text">Time: <%=  newJob.time %> </p>
+                <form action="/submitLink" method="post">
+                  <div class="form-group">
+                    <label for="zoomLinkInput">Zoom Link</label>
+                    <input id = "zoomLinkInput" class="form-control" type="text" name="zoomLink" value="<%= newJob.zoomLink %>">
+                    <input type="hidden" name="matchID" value="<%= newJob._id %>">
+                  </div>
+                    <button type="submit" class="btn btn-primary card-button">Update zoom link!</button>
+                </form>
+              </div>
+            </div>
+
+            <%} %>
+
+          </div>
+        </div>
+        <%} %>
+
+        <%if(arrayLength>=4){ %>
+        <% for(i = 4;i<arrayLength;i++){ %>
+        <% newJob = jobInfo[i]; %>
+
+        <%if(i%4==0){%>
+        <%if(arrayLength-i<4)widthPercent = widthPercent*((arrayLength-i)/4);%>
+        <div class="carousel-item">
+          <div class="card-deck" style="width: <%=widthPercent%>%;">
+            <%}%>
+
+      <div class="card text-white index-card  mb-3" style="width: 18rem;">
+        <div class="card-header "><a href="<%=newJob.studentID%>" style = "position:relative; z-index :1000;">Student Name <%=newJob.studentName%></a>
+          <img src="data:image/<%=newJob.studentImg.contentType%>;base64,
+            <%=newJob.studentImg.data.toString('base64')%>" ></div>
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2 ">Match details</h6>
+            <p class="card-text">Subject: <%=  newJob.subject %> </p>
+            <p class="card-text">Level: <%=  newJob.studentLevel %> </p>
+            <p class="card-text">Lesson Type: <%=  newJob.kind %> </p>
+            <p class="card-text">Date: <%=  newJob.date %> </p>
+            <p class="card-text">Time: <%=  newJob.time %> </p>
+            <form action="/submitLink" method="post">
+              <div class="form-group">
+                <label for="zoomLinkInput">Zoom Link</label>
+                <input id = "zoomLinkInput" class="form-control" type="text" name="zoomLink" value="<%= newJob.zoomLink %>">
+                <input type="hidden" name="matchID" value="<%= newJob._id %>">
+              </div>
+                <button type="submit" class="btn btn-primary card-button">Update zoom link!</button>
+            </form>
+          </div>
+        </div>
+
+        <% if(i%4==3||i==(arrayLength-1)){%>
+      </div>
+    </div>
+    <%}%>
+    <%}} %>
+
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleControls1" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls1" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+    </a>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-10">
+
+
+    <% jobInfo = jobsLists.pastMatchInfo %>
+    <% arrayLength = jobInfo.length %>
+
+    <% widthPercent = 100;%>
+
+    <h2>you have <%= arrayLength%> past jobs</h2>
+
+    <div id="carouselExampleControls" class="carousel slide" data-interval="false">
+
+      <div class="carousel-inner">
+        <%if(arrayLength!=0){ %>
+        <div class="carousel-item active">
+
+            <%var firstIndex = Math.min(4,arrayLength) %>
+            <%if(arrayLength<4)widthPercent = widthPercent*(arrayLength/4);%>
+            <% for(i = 0;i<firstIndex;i++){ %>
+            <% newJob = jobInfo[i]; %>
+            <%if(i==0){%>
+              <div class="card-deck" style="width: <%=widthPercent%>%">
+            <%}%>
+            <div class="card text-white bg-success  mb-3" style="width: 18rem;">
+              <div class="card-header "><a href="<%=newJob.studentID%>" style = "position:relative; z-index :1000;">Student Name <%=newJob.studentName%></a>
+                <img src="data:image/<%=newJob.studentImg.contentType%>;base64,
+                  <%=newJob.studentImg.data.toString('base64')%>" ></div>
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 ">Match details</h6>
+                <p class="card-text">Subject: <%=  newJob.subject %> </p>
+                <p class="card-text">Level: <%=  newJob.studentLevel %> </p>
+                <p class="card-text">Lesson Type: <%=  newJob.kind %> </p>
+                <p class="card-text">Date: <%=  newJob.date %> </p>
+                <p class="card-text">Time: <%=  newJob.time %> </p>
+                <form action="/review" method="post">
+                    <input type="hidden" name="revieweeID" value="<%= newJob.studentID %>">
+                    <input type="hidden" name="revieweeName" value="<%= newJob.studentName %>">
+                    <button type="submit" class="btn btn-primary card-button">Review <%= newJob.studentName %></button>
+                </form>
+              </div>
+            </div>
+
+            <%} %>
+
+          </div>
+        </div>
+        <%} %>
+
+        <%if(arrayLength>=4){ %>
+        <% for(i = 4;i<arrayLength;i++){ %>
+        <% newJob = jobInfo[i]; %>
+
+        <%if(i%4==0){%>
+        <%if(arrayLength-i<4)widthPercent = widthPercent*((arrayLength-i)/4);%>
+        <div class="carousel-item">
+          <div class="card-deck" style="width: <%=widthPercent%>%;">
+            <%}%>
+
+      <div class="card text-white bg-success  mb-3" style="width: 18rem;">
+        <div class="card-header "><a href="<%=newJob.studentID%>" style = "position:relative; z-index :1000;">Student Name <%=newJob.studentName%></a>
+          <img src="data:image/<%=newJob.studentImg.contentType%>;base64,
+            <%=newJob.studentImg.data.toString('base64')%>" ></div>
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2 ">Match details</h6>
+            <p class="card-text">Subject: <%=  newJob.subject %> </p>
+            <p class="card-text">Level: <%=  newJob.studentLevel %> </p>
+            <p class="card-text">Lesson Type: <%=  newJob.kind %> </p>
+            <p class="card-text">Date: <%=  newJob.date %> </p>
+            <p class="card-text">Time: <%=  newJob.time %> </p>
+            <form action="/review" method="post">
+                <input type="hidden" name="revieweeID" value="<%= newJob.studentID %>">
+                <input type="hidden" name="revieweeName" value="<%= newJob.studentName %>">
+                <button type="submit" class="btn btn-primary card-button">Review <%= newJob.studentName %></button>
+            </form>
+          </div>
+        </div>
+
+        <% if(i%4==3||i==(arrayLength-1)){%>
+      </div>
+    </div>
+    <%}%>
+    <%}} %>
+
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleControls2" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls2" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+    </a>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-10">
+    <% jobInfo = jobsLists.expiredOffer %>
+    <% arrayLength = jobInfo.length %>
+
+    <% widthPercent = 100;%>
+
+    <h2>you have <%= arrayLength%> past jobs</h2>
+
+    <div id="carouselExampleControls" class="carousel slide" data-interval="false">
+
+      <div class="carousel-inner">
+        <%if(arrayLength!=0){ %>
+        <div class="carousel-item active">
+
+            <%var firstIndex = Math.min(4,arrayLength) %>
+            <%if(arrayLength<4)widthPercent = widthPercent*(arrayLength/4);%>
+            <% for(i = 0;i<firstIndex;i++){ %>
+            <% newJob = jobInfo[i]; %>
+            <%if(i==0){%>
+              <div class="card-deck" style="width: <%=widthPercent%>%">
+            <%}%>
+            <div class="card text-white bg-success  mb-3" style="width: 18rem;">
+              <div class="card-header "><a href="acc/<%=newJob.studentID%>" style = "position:relative; z-index :1000;">Student Name <%=newJob.studentName%></a>
+                <img src="data:image/<%=newJob.studentImg.contentType%>;base64,
+                  <%=newJob.studentImg.data.toString('base64')%>" ></div>
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 ">Match details</h6>
+                <p class="card-text">Subject: <%=  newJob.subject %> </p>
+                <p class="card-text">Level: <%=  newJob.studentLevel %> </p>
+                <p class="card-text">Lesson Type: <%=  newJob.kind %> </p>
+                <p class="card-text">Date: <%=  newJob.date %> </p>
+                <p class="card-text">Time: <%=  newJob.time %> </p>
+
+              </div>
+            </div>
+
+            <%} %>
+
+          </div>
+        </div>
+        <%} %>
+
+        <%if(arrayLength>=4){ %>
+        <% for(i = 4;i<arrayLength;i++){ %>
+        <% newJob = jobInfo[i]; %>
+
+        <%if(i%4==0){%>
+        <%if(arrayLength-i<4)widthPercent = widthPercent*((arrayLength-i)/4);%>
+        <div class="carousel-item">
+          <div class="card-deck" style="width: <%=widthPercent%>%;">
+            <%}%>
+
+      <div class="card text-white bg-success  mb-3" style="width: 18rem;">
+        <div class="card-header "><a href="<%=newJob.studentID%>" style = "position:relative; z-index :1000;">Student Name <%=newJob.studentName%></a>
+          <img src="data:image/<%=newJob.studentImg.contentType%>;base64,
+            <%=newJob.studentImg.data.toString('base64')%>" ></div>
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2 ">Match details</h6>
+            <p class="card-text">Subject: <%=  newJob.subject %> </p>
+            <p class="card-text">Level: <%=  newJob.studentLevel %> </p>
+            <p class="card-text">Lesson Type: <%=  newJob.kind %> </p>
+            <p class="card-text">Date: <%=  newJob.date %> </p>
+            <p class="card-text">Time: <%=  newJob.time %> </p>
+
+          </div>
+        </div>
+
+        <% if(i%4==3||i==(arrayLength-1)){%>
+      </div>
+    </div>
+    <%}%>
+    <%}} %>
+
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleControls2" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls2" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+    </a>
+    </div>
+  </div>
+</div>
+
+
+</div>
+
+<p class = "attribute">
+  Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+  <br>
+  Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+</p>
+
+
+
+
+<%- include("footer") -%>

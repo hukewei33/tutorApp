@@ -1,24 +1,36 @@
 <%- include("header") -%>
-<%- include("loginNav") -%>
+<%- include("basicNav") -%>
 
 <h1>students</h1>
 
 <div class="container">
-  <form class="" action="/students" method="post">
+  <form class="myform" action="/students" method="post">
     <fieldset>
       <legend>What Will You be Learning?</legend>
       <div class="form-row">
 
+        <!-- future implementaiton of using the students subject combination  -->
         <div class="form-group col-md-4">
           <label for="inputSubject">Subject</label>
           <select id="inputSubject" class="form-control custom-select" name="subject" required>
             <option value="Math">Math</option>
             <option value="Science">Science</option>
             <option value="English">English</option>
+            <option value="History">History</option>
+            <option value="Geography">Geography</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Physics">Physics</option>
+            <option value="Biology">Biology</option>
+            <option value="Chinese">Chinese</option>
+            <option value="GP">GP</option>
+            <option value="Economics">Economics</option>
+            <option value="English Lit">English Lit</option>
+            <option value="Social Studies">Social Studies</option>
           </select>
         </div>
 
-        <div class="form-group col-md-4">
+        <!-- all of now, use students current school year, allow more robust change in the future -->
+        <!-- <div class="form-group col-md-4">
           <label for="inputLevels">Level</label>
           <select id="inputLevels" class="form-control custom-select" name="levels" required >
             <option value="1">sec 1</option>
@@ -26,7 +38,7 @@
             <option value="3">sec 3</option>
             <option value="4">sec 4</option>
           </select>
-        </div>
+        </div> -->
 
         <div class="form-group col-md-4">
           <label for="inputKind">Subject</label>
@@ -60,6 +72,17 @@
             <option value="10:00">10:00</option>
             <option value="11:00">11:00</option>
             <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+            <option value="22:00">22:00</option>
+            <option value="23:00">23:00</option>
           </select>
         </div>
 

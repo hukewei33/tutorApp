@@ -1,0 +1,28 @@
+<%- include("header") -%>
+<%- include("basicNav") -%>
+<div class="container" style="margin-top:5%">
+  <div class="row justify-content-center align-items-end">
+    <div class="col col-lg-6 my-auto">
+      <div class="card index-card">
+        <div class="card-body">
+          <h5 class="card-title">Register you email</h5>
+          <% if(retry){%>
+            <p>The email you entered is already registered</p>
+          <%}%>
+          <form action="/registerEmail" method="POST">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" name="requestedEmail">
+            </div>
+            <button type="submit" class="btn btn-primary">Next</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<%- include("footer") -%>

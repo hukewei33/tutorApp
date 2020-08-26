@@ -11,3 +11,69 @@
   color:grey;
   font-size: 5px;
 }
+
+.nav-link, .nav-link:hover{
+  color:white;
+}
+
+
+
+.btn-primary{
+  background-color: #ed6663;
+  border: none;
+}
+
+.btn-primary:hover{
+  background-color: #ffa372;
+  border: none;
+}
+
+.nav_buttons2{
+  margin-left: 70%;
+}
+
+.my_nav{
+  background-color: #0f4c81;
+  color: red;
+}
+
+body{
+  background-color: #1b262c;
+  color:white;
+}
+
+img {
+  max-width: 100%;
+  max-height: 70%;
+  display: block;
+ margin-left: auto;
+ margin-right: auto;
+}
+
+.index-card{
+  margin:auto;
+  background-color: #0f4c81;
+}
+
+.myform{
+  padding:5%;
+  margin:auto;
+  background-color: #0f4c81;
+}
+
+.valid {
+  color: green;
+}
+
+
+
+/* Add a red text color and an "x" icon when the requirements are wrong */
+.invalid {
+  color: red;
+}
+
+.card-button{
+  /* position: relative;
+  left: 15%; */
+  float: right;
+}

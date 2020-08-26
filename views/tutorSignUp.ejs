@@ -1,0 +1,47 @@
+<%- include("header") -%>
+<%- include("basicNavUpdate") -%>
+
+<h1>Update Student information</h1>
+<div class="container">
+  <div class="row justify-content-center align-items-end">
+    <div class="col col-lg-6 my-auto">
+      <div class="card index-card">
+        <div class="card-body">
+          <h5 class="card-title">Tell us about your schooling!</h5>
+          <form class="" action="/tutorSignUp" method="post">
+            <fieldset>
+                <div class="form-group col-md-4">
+                  <label for="secondary">Secondary School</label>
+                  <input type="text" class = "form-control"name="secondary" value="" required>
+                  <label for="postSecondary">Post-Secondary School(JC,Poly)</label>
+                  <input type="text" class = "form-control"name="postSecondary" value="" required>
+                  <label for="underGrad">Undergraduate School</label>
+                  <input type="text" class = "form-control"name="underGrad" value="" >
+                  <label for="postGrad">Postgraduate School</label>
+                  <input type="text" class = "form-control"name="postGrad" value="" >
+                </div>
+
+
+                <div class="form-group col-md-4">
+                  <label for="tutorCatagory">Tutor Catagory</label>
+                  <select class="form-control custom-select" name="tutorCatagory" required >
+                    <option value="Current MOE Teacher">Current MOE Teacher</option>
+                    <option value="Ex MOE Teacher">Ex MOE Teacher</option>
+                    <option value="Undergraduate">Undergraduate</option>
+
+                  </select>
+                </div>
+            </fieldset>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+
+<%- include("footer") -%>

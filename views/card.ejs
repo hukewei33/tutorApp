@@ -1,0 +1,15 @@
+<div class="card text-white bg-success  mb-3" style="width: 18rem;">
+  <div class="card-header ">Tutor Name <%=newJob.tutorID%></div>
+  <div class="card-body">
+    <h6 class="card-subtitle mb-2 ">Match details</h6>
+    <p class="card-text">Subject: <%=  newJob.subject %> </p>
+    <p class="card-text">Level: <%=  newJob.level %> </p>
+    <p class="card-text">Lesson Type: <%=  newJob.kind %> </p>
+    <p class="card-text">Date: <%=  newJob.date %> </p>
+    <p class="card-text">Time: <%=  newJob.time %> </p>
+    <form action="/booking" method="post">
+      <input type="hidden" name="selectedID" value="<%=newJob._id%>">
+      <input class="btn btn-dark view-info" type="submit" value="Book">
+    </form>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+<%- include("header") -%>
+<%- include("basicNav") -%>
+<div class="container" style="margin-top:5%">
+  <div class="row justify-content-center align-items-end">
+    <div class="col col-lg-6 my-auto">
+      <div class="card index-card">
+        <div class="card-body">
+          <h5 class="card-title">Register account for <%=email%></h5>
+          <form action="/registerPW" method="POST">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id = "pw" class="form-control" name="requestedPW">
+              <label for="retype-password">Retype Password</label>
+              <input type="password" id = "pw1" class="form-control" name="retype-requestedPW">
+              <input type="hidden" name="requestedEmail" value="<%=email%>">
+            </div>
+            <button type="submit" class="btn btn-primary" id = "next"disabled>Next</button>
+          </form>
+            <p class = "card-text">Password and retyped password should be:</p>
+            <p id="match" class="invalid"><b>Matching</b></p>
+            <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  var myInput = document.getElementById("pw");
+  var myInput1 = document.getElementById("pw1")
+  var match = document.getElementById("match");
+  var length = document.getElementById("length");
+  var matchOK = false;
+  var lengthOK = false;
+  const button = document.getElementById("next");
+
+  myInput.onkeyup = function(){
+    // Validate length
+  if(myInput.value.length >= 8) {
+    length.classList.remove("invalid");
+    length.classList.add("valid");
+    lengthOK=true;
+
+  } else {
+    length.classList.remove("valid");
+    length.classList.add("invalid");
+    lengthOK = false;
+  }
+  if(lengthOK&&matchOK){
+    button.disabled=false;
+  }
+  }
+
+  myInput1.onkeyup = function(){
+    //validate matching
+    if(myInput.value===myInput1.value){
+      match.classList.remove("invalid");
+      match.classList.add("valid");
+      matchOK = true;
+    } else {
+      match.classList.remove("valid");
+      match.classList.add("invalid");
+      matchOK = false;
+    }
+    if(lengthOK&&matchOK){
+      button.disabled=false;
+    }
+  }
+
+button.onclick=function(){
+  if(lengthOK&&matchOK) alert("Please log into your new account");
+}
+
+</script>
+
+
+
+<%- include("footer") -%>

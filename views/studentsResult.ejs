@@ -1,72 +1,369 @@
 <%- include("header") -%>
-<%- include("loginNav") -%>
+<%- include("basicNav") -%>
 
-<h1>students result</h1>
+<!-- <script src="creditCheck.js"></script> -->
+<!-- bring the lesson type and level to the top -->
+
+<h1>Students result</h1>
 
 <div class="container">
-<h1>Perfect matches</h1>
-  <div class="card-group">
-    <% perfectList.forEach(function(match){ %>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card text-white bg-success  mb-3">
+      <div class="card-header ">Search Parameters</div>
+      <div class="card-body">
+        <p class="card-text">Subject: <%= searchSubject%> </p>
+        <p class="card-text">Level: <%=  searchLevel %> </p>
+        <p class="card-text">Lesson Type: <%= searchKind %> </p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <% var jobInfo = perfectList %>
+    <% var arrayLength = jobInfo.length %>
+    <% var newJob; %>
+    <% var i; %>
+    <% var widthPercent = 100;%>
+
+    <h2>you have <%= arrayLength%> perfect matches</h2>
+
+
+    <div id="carouselExampleControls" class="carousel slide" data-interval="false">
+
+      <div class="carousel-inner">
+        <%if(arrayLength!=0){ %>
+        <div class="carousel-item active">
+
+            <%var firstIndex = Math.min(4,arrayLength) %>
+            <%if(arrayLength<4)widthPercent = widthPercent*(arrayLength/4);%>
+            <% for(i = 0;i<firstIndex;i++){ %>
+            <% newJob = jobInfo[i]; %>
+            <%if(i==0){%>
+              <div class="card-deck" style="width: <%=widthPercent%>%">
+            <%}%>
+            <div class="card text-white bg-success  mb-3" style="width: 18rem;">
+              <div class="card-header ">
+                <a href="<%=newJob.tutorID%>" style = "position:relative; z-index :1000;">Tutor Name <%=newJob.tutorName%></a>
+                <img src="data:image/<%=newJob.tutorImg.contentType%>;base64,
+        					<%=newJob.tutorImg.data.toString('base64')%>" >
+              </div>
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 ">Match details</h6>
+
+                <p class="card-text">Date: <%=  newJob.date %> </p>
+                <p class="card-text">Time: <%=  newJob.time %> </p>
+                <form action="/booking" method="post">
+                  <input type="hidden" name="selectedID" value="<%=newJob._id%>">
+                  <input type="hidden" name="selectedKind" value="<%= searchKind %>">
+                  <input class="btn btn-primary card-button view-info" type="submit" value="Book">
+                </form>
+              </div>
+            </div>
+
+            <%} %>
+
+          </div>
+        </div>
+        <%} %>
+
+        <%if(arrayLength>=4){ %>
+        <% for(i = 4;i<arrayLength;i++){ %>
+        <% newJob = jobInfo[i]; %>
+
+        <%if(i%4==0){%>
+        <%if(arrayLength-i<4)widthPercent = widthPercent*((arrayLength-i)/4);%>
+        <div class="carousel-item">
+          <div class="card-deck" style="width: <%=widthPercent%>%;">
+            <%}%>
+
       <div class="card text-white bg-success  mb-3" style="width: 18rem;">
-        <div class="card-header ">Tutor Name <%=  match.tutorNickName %></div>
-        <div class="card-body">
-          <h6 class="card-subtitle mb-2 ">Match details</h6>
-          <p class="card-text">Subject: <%=  match.subject %> </p>
-          <p class="card-text">Level: <%=  match.level %> </p>
-          <p class="card-text">Lesson Type: <%=  match.kind %> </p>
-          <p class="card-text">Date: <%=  match.date %> </p>
-          <p class="card-text">Time: <%=  match.time %> </p>
-          <form action="/view" method="post">
-            <input type="hidden" name="selectedID" value="<%=match._id%>">
-            <input class="btn btn-dark" type="submit" value="view info">
-          </form>
-
+        <div class="card-header "><a href="<%=newJob.tutorID%>" style = "position:relative; z-index :1000;">Tutor Name <%=newJob.tutorName%></a>
+        <img src="data:image/<%=newJob.tutorImg.contentType%>;base64,
+          <%=newJob.tutorImg.data.toString('base64')%>" >
         </div>
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2 ">Match details</h6>
+
+            <p class="card-text">Date: <%=  newJob.date %> </p>
+            <p class="card-text">Time: <%=  newJob.time %> </p>
+            <form action="/booking" method="post">
+              <input type="hidden" name="selectedID" value="<%=newJob._id%>">
+              <input type="hidden" name="selectedKind" value="<%= searchKind %>">
+              <input class="btn btn-primary card-button view-info" type="submit" value="Book">
+            </form>
+          </div>
+        </div>
+
+        <% if(i%4==3||i==(arrayLength-1)){%>
       </div>
-    <%});%>
+    </div>
+    <%}%>
+    <%}} %>
+
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+  </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <h1>Same Date Matche</h1>
+
+    <% jobInfo = sameDateList %>
+    <% arrayLength = jobInfo.length %>
+
+    <% widthPercent = 100;%>
+
+    <h2>you have <%= arrayLength%> same date matches</h2>
+
+
+    <div id="carouselExampleControls" class="carousel slide" data-interval="false">
+
+      <div class="carousel-inner">
+        <%if(arrayLength!=0){ %>
+        <div class="carousel-item active">
+
+            <%var firstIndex = Math.min(4,arrayLength) %>
+            <%if(arrayLength<4)widthPercent = widthPercent*(arrayLength/4);%>
+            <% for(i = 0;i<firstIndex;i++){ %>
+            <% newJob = jobInfo[i]; %>
+            <%if(i==0){%>
+              <div class="card-deck" style="width: <%=widthPercent%>%">
+            <%}%>
+            <div class="card text-white bg-info  mb-3" style="width: 18rem;">
+              <div class="card-header "><a href="<%=newJob.tutorID%>" style = "position:relative; z-index :1000;">Tutor Name <%=newJob.tutorName%></a>
+              <img src="data:image/<%=newJob.tutorImg.contentType%>;base64,
+                <%=newJob.tutorImg.data.toString('base64')%>" >
+                </div>
+                <div class="card-body">
+                <h6 class="card-subtitle mb-2 ">Match details</h6>
+                <p class="card-text">Date: <%=  newJob.date %> </p>
+                <p class="card-text">Time: <%=  newJob.time %> </p>
+                <form action="/booking" method="post">
+                  <input type="hidden" name="selectedID" value="<%=newJob._id%>">
+                  <input class="btn btn-primary card-button view-info" type="submit" value="Book">
+                </form>
+              </div>
+            </div>
+
+            <%} %>
+
+          </div>
+        </div>
+        <%} %>
+
+        <%if(arrayLength>=4){ %>
+        <% for(i = 4;i<arrayLength;i++){ %>
+        <% newJob = jobInfo[i]; %>
+
+        <%if(i%4==0){%>
+        <%if(arrayLength-i<4)widthPercent = widthPercent*((arrayLength-i)/4);%>
+        <div class="carousel-item">
+          <div class="card-deck" style="width: <%=widthPercent%>%;">
+            <%}%>
+
+      <div class="card text-white bg-info  mb-3" style="width: 18rem;">
+        <div class="card-header "><a href="<%=newJob.tutorID%>" style = "position:relative; z-index :1000;">Tutor Name <%=newJob.tutorName%></a>
+        <img src="data:image/<%=newJob.tutorImg.contentType%>;base64,
+          <%=newJob.tutorImg.data.toString('base64')%>" >
+          </div>
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2 ">Match details</h6>
+            <p class="card-text">Date: <%=  newJob.date %> </p>
+            <p class="card-text">Time: <%=  newJob.time %> </p>
+            <form action="/booking" method="post">
+              <input type="hidden" name="selectedID" value="<%=newJob._id%>">
+              <input class="btn btn-primary card-button view-info" type="submit" value="Book">
+            </form>
+          </div>
+        </div>
+
+        <% if(i%4==3||i==(arrayLength-1)){%>
+      </div>
+    </div>
+    <%}%>
+    <%}} %>
+
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
   </div>
 
-<h1>Same Date Matches</h1>
-  <div class="card-group">
-    <% sameDateList.forEach(function(match){ %>
-      <div class="card text-white bg-primary mb-3" style="width: 18rem;">
-        <div class="card-header ">Tutor Name <%=  match.tutorNickName %></div>
-        <div class="card-body">
-          <h6 class="card-subtitle mb-2 ">Match details</h6>
-          <p class="card-text">Subject: <%=  match.subject %> </p>
-          <p class="card-text">Level: <%=  match.level %> </p>
-          <p class="card-text">Lesson Type: <%=  match.kind %> </p>
-          <p class="card-text">Date: <%=  match.date %> </p>
-          <p class="card-text">Time: <%=  match.time %> </p>
-          <form action="/view" method="post">
-            <input type="hidden" name="selectedID" value="<%=match._id%>">
-            <input class="btn btn-dark" type="submit" value="view info">
-          </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <h1>Same Date Matche</h1>
+
+    <% jobInfo = sameTimeList %>
+    <% arrayLength = jobInfo.length %>
+
+    <% widthPercent = 100;%>
+
+    <h2>you have <%= arrayLength%> same time matches</h2>
+
+
+    <div id="carouselExampleControls" class="carousel slide" data-interval="false">
+
+      <div class="carousel-inner">
+        <%if(arrayLength!=0){ %>
+        <div class="carousel-item active">
+
+            <%var firstIndex = Math.min(4,arrayLength) %>
+            <%if(arrayLength<4)widthPercent = widthPercent*(arrayLength/4);%>
+            <% for(i = 0;i<firstIndex;i++){ %>
+            <% newJob = jobInfo[i]; %>
+            <%if(i==0){%>
+              <div class="card-deck" style="width: <%=widthPercent%>%">
+            <%}%>
+            <div class="card text-white bg-info  mb-3" style="width: 18rem;">
+              <div class="card-header "><a href="<%=newJob.tutorID%>" style = "position:relative; z-index :1000;">Tutor Name <%=newJob.tutorName%></a>
+              <img src="data:image/<%=newJob.tutorImg.contentType%>;base64,
+                <%=newJob.tutorImg.data.toString('base64')%>" >
+                </div>
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 ">Match details</h6>
+                <p class="card-text">Date: <%=  newJob.date %> </p>
+                <p class="card-text">Time: <%=  newJob.time %> </p>
+                <form action="/booking" method="post">
+                  <input type="hidden" name="selectedID" value="<%=newJob._id%>">
+                  <input class="btn btn-primary card-button view-info" type="submit" value="Book">
+                </form>
+              </div>
+            </div>
+
+            <%} %>
+
+          </div>
         </div>
+        <%} %>
+
+        <%if(arrayLength>=4){ %>
+        <% for(i = 4;i<arrayLength;i++){ %>
+        <% newJob = jobInfo[i]; %>
+
+        <%if(i%4==0){%>
+        <%if(arrayLength-i<4)widthPercent = widthPercent*((arrayLength-i)/4);%>
+        <div class="carousel-item">
+          <div class="card-deck" style="width: <%=widthPercent%>%;">
+            <%}%>
+
+      <div class="card text-white bg-info  mb-3" style="width: 18rem;">
+        <div class="card-header "><a href="<%=newJob.tutorID%>" style = "position:relative; z-index :1000;">Tutor Name <%=newJob.tutorName%></a><img src="data:image/<%=newJob.tutorImg.contentType%>;base64,
+          <%=newJob.tutorImg.data.toString('base64')%>" ></div>
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2 ">Match details</h6>
+            <p class="card-text">Date: <%=  newJob.date %> </p>
+            <p class="card-text">Time: <%=  newJob.time %> </p>
+            <form action="/booking" method="post">
+              <input type="hidden" name="selectedID" value="<%=newJob._id%>">
+              <input class="btn btn-primary card-button view-info" type="submit" value="Book">
+            </form>
+          </div>
+        </div>
+
+        <% if(i%4==3||i==(arrayLength-1)){%>
       </div>
-    <%});%>
+    </div>
+    <%}%>
+    <%}} %>
+
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
   </div>
 
+  </div>
+</div>
+
+
+
+
+
+
+  <!-- <h1>Perfect matches</h1>
+  <div class="card-deck" style="width: 25%">
+    <% perfectList.forEach(function(match){ %>
+    <div class="card text-white bg-success ">
+      <div class="card-header ">
+        <h5 class="card-title"><%= match.date %> <%= match.time %></h5>
+      </div>
+      <p>placeholder for img</p>
+      <div class="card-body ">
+        <ul class="list-group list-group-flush ">
+          <li class="list-group-item index-card">
+            <p>Name:<%=match.tutorName%></p>
+            <p>Tutor Catagory:<%=match.tutorCatagory%></p>
+            <p>Number of Jobs Completed:<%=match.tutorCount%></p>
+          </li>
+          <li class="list-group-item index-card">
+            <p>placeholder for reviews</p>
+          </li>
+        </ul>
+
+      </div>
+      <div class="card-foooter">
+        <form action="/booking" method="post">
+          <input type="hidden" name="selectedID" value="<%=match._id%>">
+          <input class="btn btn-dark view-info" type="submit" value="Book">
+        </form>
+      </div>
+
+
+    </div>
+    <%});%>
+  </div> -->
+
+
+
+
+
+
+
+<!-- <br>
 <h1>Same time matches</h1>
-  <div class="card-group">
-    <% sameTimeList.forEach(function(match){ %>
-      <div class="card text-white bg-info mb-3" style="width: 18rem;">
-        <div class="card-header ">Tutor Name <%=  match.tutorNickName %></div>
-        <div class="card-body">
-          <h6 class="card-subtitle mb-2 ">Match details</h6>
-          <p class="card-text">Subject: <%=  match.subject %> </p>
-          <p class="card-text">Level: <%=  match.level %> </p>
-          <p class="card-text">Lesson Type: <%=  match.kind %> </p>
-          <p class="card-text">Date: <%=  match.date %> </p>
-          <p class="card-text">Time: <%=  match.time %> </p>
-          <form action="/view" method="post">
-            <input type="hidden" name="selectedID" value="<%=match._id%>">
-            <input class="btn btn-dark" type="submit" value="view info">
-          </form>
-        </div>
-      </div>
-    <%});%>
+<div class="card-group">
+  <% sameTimeList.forEach(function(match){ %>
+  <div class="card text-white bg-info mb-3">
+    <div class="card-header ">Tutor Name <%=  match.tutorNickName %></div>
+    <div class="card-body">
+      <h6 class="card-subtitle mb-2 ">Match details</h6>
+      <p class="card-text">Subject: <%=  match.subject %> </p>
+      <p class="card-text">Level: <%=  match.level %> </p>
+      <p class="card-text">Lesson Type: <%=  match.kind %> </p>
+      <p class="card-text">Date: <%=  match.date %> </p>
+      <p class="card-text">Time: <%=  match.time %> </p>
+      <form action="/view" method="post">
+        <input type="hidden" name="selectedID" value="<%=match._id%>">
+        <input class="btn btn-dark view-info" type="submit" value="view info">
+      </form>
+    </div>
   </div>
+  <%});%>
+</div> -->
 
 </div>
 

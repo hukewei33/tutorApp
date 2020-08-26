@@ -1,0 +1,82 @@
+<%- include("header") -%>
+<%- include("basicNav") -%>
+
+
+
+<div class="container">
+  <div class="row justify-content-center align-items-start">
+    <div class="col col-lg-6 my-auto">
+      <div class="card index-card">
+
+        <div class="card-body">
+          <h5 class="card-title">Profile picture</h5>
+          <img src="data:image/<%=accInfo.info.img.contentType%>;base64,
+  					<%=accInfo.info.img.data.toString('base64')%>" style = "width:70%;height:50%;">
+        </div>
+      </div>
+    </div>
+
+    <div class="col col-lg-6 my-auto">
+      <div class="card index-card">
+
+        <div class="card-body">
+          <h5 class="card-title">Account Infomation</h5>
+
+          <p>First Name: <%= accInfo.info.firstName %></p>
+          <p>Last Name: <%= accInfo.info.lastName %></p>
+          <p>Year Of Birth: <%= accInfo.info.yob %></p>
+          <p>Gender: <%= accInfo.info.gender %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center align-items-start">
+    <div class="col col-lg-12 my-auto">
+      <div class="card index-card">
+        <div class="card-body">
+          <h5 class="card-title">Tutor Information</h5>
+          <p>Tutor Type: <%= accInfo.info.tutorCatagory %></p>
+          <p>Secondary School: <%= accInfo.info.secondary %></p>
+          <p>Post Secondary School: <%= accInfo.info.postSecondary %></p>
+          <p>Undergraduate: <%= accInfo.info.underGrad %></p>
+          <p>Postgraduate: <%= accInfo.info.postGrad %></p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center align-items-start">
+    <div class="col col-lg-12 my-auto">
+      <div class="card index-card">
+
+        <div class="card-body">
+          <h5 class="card-title">Reviews</h5>
+          <!-- calculate ave rating -->
+          <%var aveRating = 0;%>
+          <% accInfo.info.reviews.forEach(function(review){ %>
+            <%aveRating=aveRating +parseInt(review.rating);%>
+          <%});%>
+          <%aveRating = aveRating / (accInfo.info.reviews.length);%>
+          <p>average rating: <%=aveRating%>/5</p>
+          <% accInfo.info.reviews.forEach(function(review){ %>
+            <div class="card text-white bg-success  mb-3" style="width: 50%;">
+              <div class="card-header ">Reviewer Name <%= review.reviewerName %> </div>
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 ">Review</h6>
+                <p class="card-text">Rating: <%=review.rating%>/5 </p>
+                <p class="card-text">Review: <%=review.review%> </p>
+              </div>
+            </div>
+
+          <%});%>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</div>
+
+<%- include("footer") -%>

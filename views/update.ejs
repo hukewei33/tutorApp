@@ -1,43 +1,48 @@
 <%- include("header") -%>
-<%- include("loginNav") -%>
+<%- include("basicNav") -%>
 
-<h1>Update information</h1>
+<h1>Update personal information</h1>
 <div class="container">
-  <form class="" action="/update" method="post">
-    <fieldset>
-      <legend>Tell us about you!</legend>
+  <div class="row justify-content-center align-items-end">
+    <div class="col col-lg-6 my-auto">
+      <div class="card index-card">
+        <div class="card-body">
+          <h5 class="card-title">Tell us about you!</h5>
+          <form class="" action="/update" method="post">
+            <fieldset>
+                <div class="form-group col-md-4">
+                  <label for="firstName">First Name</label>
+                  <input type="text" class = "form-control"name="firstName" value="" required>
+                </div>
 
-        <div class="form-group col-md-4">
-          <label>nick name</label>
-          <input type="text" name="nickName" value="" required>
+                <div class="form-group col-md-4">
+                  <label for="lastName">Last Name</label>
+                  <input type="text"  class = "form-control" name="lastName" value="" required>
+                </div>
+                <!-- to automate valid range of years -->
+                <div class="form-group col-md-4">
+                <label for="yob">Year of Birth</label>
+                <input type="number"  class = "form-control" name="yob" value="" min = "1900" max = "2020"requires>
+                </div>
+
+                <div class="form-group col-md-4">
+                  <label >Gender</label>
+                  <select class="form-control custom-select" name="gender" required >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+            </fieldset>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </form>
         </div>
+      </div>
+    </div>
 
-        <div class="form-group col-md-4">
-        <label>Age</label>
-        <input type="number" name="age" value="" requires>
-        </div>
+  </div>
 
-        <div class="form-group col-md-4">
-          <label >Gender</label>
-          <select class="form-control custom-select" name="gender" required >
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Failure">Failure</option>
-          </select>
-        </div>
 
-        <div class="form-group col-md-4">
-          <label >School</label>
-          <select id="inputKind" class="form-control custom-select" name="school" required >
-            <option value="Raffles">Raffles</option>
-            <option value="stupid">Stupid</option>
-          </select>
-        </div>
-
-    </fieldset>
-
-    <button type="submit" class="btn btn-primary">Submit!</button>
-  </form>
 </div>
 
 
