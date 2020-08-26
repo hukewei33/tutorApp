@@ -6,11 +6,15 @@
 
 <div class="row">
   <div class="col-10">
-    <% var jobInfo = jobsLists.jobInfo %>
-    <% var arrayLength = jobInfo.length %>
+    <% var jobInfo; %>
+    <% var arrayLength;%>
     <% var newJob; %>
     <% var i; %>
-    <% var widthPercent = 100;%>
+    <% var widthPercent;%>
+    <%  jobInfo = jobsLists.jobInfo %>
+    <%  arrayLength = jobInfo.length %>
+
+    <%  widthPercent = 100;%>
 
     <h2>you have <%= arrayLength%> jobs offers</h2>
 
@@ -300,7 +304,7 @@
 
     <% widthPercent = 100;%>
 
-    <h2>you have <%= arrayLength%> past jobs</h2>
+    <h2>you have <%= arrayLength%> Expired jobs</h2>
 
     <div id="carouselExampleControls" class="carousel slide" data-interval="false">
 
@@ -316,9 +320,8 @@
               <div class="card-deck" style="width: <%=widthPercent%>%">
             <%}%>
             <div class="card text-white bg-success  mb-3" style="width: 18rem;">
-              <div class="card-header "><a href="acc/<%=newJob.studentID%>" style = "position:relative; z-index :1000;">Student Name <%=newJob.studentName%></a>
-                <img src="data:image/<%=newJob.studentImg.contentType%>;base64,
-                  <%=newJob.studentImg.data.toString('base64')%>" ></div>
+              <div class="card-header ">Tutor Name <%=newJob.tutorName%></div>
+
               <div class="card-body">
                 <h6 class="card-subtitle mb-2 ">Match details</h6>
                 <p class="card-text">Subject: <%=  newJob.subject %> </p>
@@ -347,9 +350,8 @@
             <%}%>
 
       <div class="card text-white bg-success  mb-3" style="width: 18rem;">
-        <div class="card-header "><a href="<%=newJob.studentID%>" style = "position:relative; z-index :1000;">Student Name <%=newJob.studentName%></a>
-          <img src="data:image/<%=newJob.studentImg.contentType%>;base64,
-            <%=newJob.studentImg.data.toString('base64')%>" ></div>
+        <div class="card-header ">Tutor Name <%=newJob.tutorName%></div>
+
           <div class="card-body">
             <h6 class="card-subtitle mb-2 ">Match details</h6>
             <p class="card-text">Subject: <%=  newJob.subject %> </p>

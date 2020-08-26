@@ -58,6 +58,8 @@ const offerSchema = {
   studentID: String,
   tutorName: String,
   studentName: String,
+  tutorEmail:String,
+  studentEmail:String,
   studentReviews:[],
   studentLevel:Number,
   tutorReviews:[],
@@ -719,6 +721,7 @@ app.post("/tutors", function(req, res) {
   const tutorName = req.cookies.userData.userName;
   const tutorReview=req.cookies.accData.info.reviews;
   const tutorCount = req.cookies.accData.info.tutorCount;
+  const tutorEmail = req.cookies.accData.info.email;
   //to do: intergrate tutor nickname into each offer
 
   if (typeof timeRequested === "string") {
@@ -751,7 +754,8 @@ app.post("/tutors", function(req, res) {
         tutorReviews:tutorReview,
         tutorJobsCount:tutorCount,
         zoomLink: "Update Now",
-        tutorImg:img
+        tutorImg:img,
+        tutorEmail:tutorEmail
       });
       newOffer.save();
       //experiment with cron
@@ -967,7 +971,8 @@ app.post("/booking", function(req, res) {
     const userName = req.cookies.userData.userName;
     const userLevel = req.cookies.accData.info.schoolYear;
     const userReviews = req.cookies.accData.info.studentReviews;
-    Offer.findById(selectedID, function(err, findRes) {
+    console.log("looking through offer with"+selectedID);
+    Offer.findOne({_id: selectedID}, function(err, findRes) {
       if (err) console.log(err);
       //conduct transaction of credits
       Account.findOne({
@@ -1012,11 +1017,11 @@ app.post("/booking", function(req, res) {
         <li>time : ${findRes.time}</li>
         </ul>
         `
-        sendEmail(outPut, "You have a new job!", findRes.tutorID);
+        sendEmail(outPut, "You have a new job!", findRes.tutorEmail);
 
-        findRes.remove();
+
       });
-
+findRes.remove();
     });
 
     // makeToCacheJobs(req,res,true);
@@ -1054,11 +1059,7 @@ app.post("/submitLink", function(req, res) {
     result.save();
   });
 
-  //update toCache cookie
-  const acc = req.cookies.toCache.account;
-  const accExist = req.cookies.toCache.accountExist;
-  res.clearCookie("toCache");
-  makeToCacheJobs(req,res,true);
+
   res.redirect("/home");
 });
 
@@ -1213,7 +1214,7 @@ cron.schedule('*/30 * * * *', () => {
     });
   });
   //look thorugh offers
-  Offers.find({}, function(err, offerList) {
+  Offer.find({}, function(err, offerList) {
     offerList.forEach(function(elem) {
       var dateString = elem.date;
       var timeString = elem.time;

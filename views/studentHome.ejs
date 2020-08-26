@@ -4,13 +4,18 @@
 <h1>Student home</h1>
 <div class="row">
   <div class="col-10">
-    <% var jobInfo = jobsLists.lessonInfo %>
-    <% var arrayLength = jobInfo.length %>
+    <% var jobInfo; %>
+    <% var arrayLength;%>
     <% var newJob; %>
     <% var i; %>
-    <% var widthPercent = 100;%>
+    <% var  widthPercent;%>
+    <%  jobInfo = jobsLists.lessonInfo %>
+    <%  arrayLength = jobInfo.length %>
 
-    <h2>you have <%= arrayLength%> upcomming lessons</h2>
+
+    <%  widthPercent = 100;%>
+
+    <h2>you have <%= arrayLength%> upcoming lessons</h2>
 
 
     <div id="carouselExampleControls" class="carousel slide" data-interval="false">
@@ -27,7 +32,7 @@
               <div class="card-deck" style="width: <%=widthPercent%>%">
             <%}%>
             <div class="card text-white bg-success  mb-3" style="width: 18rem;">
-              <div class="card-header "><a href="<%=newJob.tutorID%>" style = "position:relative; z-index :1000;">Tutor Name <%=newJob.tutorName%></a>
+              <div class="card-header "><a href="acc/<%=newJob.tutorID%>" style = "position:relative; z-index :1000;">Tutor Name <%=newJob.tutorName%></a>
                 <img src="data:image/<%=newJob.tutorImg.contentType%>;base64,
                   <%=newJob.tutorImg.data.toString('base64')%>" ></div>
               <div class="card-body">
@@ -60,7 +65,7 @@
             <%}%>
 
       <div class="card text-white bg-success  mb-3" style="width: 18rem;">
-        <div class="card-header "><a href="<%=newJob.tutorID%>" style = "position:relative; z-index :1000;">Tutor Name <%=newJob.tutorName%></a>
+        <div class="card-header "><a href="acc/<%=newJob.tutorID%>" style = "position:relative; z-index :1000;">Tutor Name <%=newJob.tutorName%></a>
           <img src="data:image/<%=newJob.tutorImg.contentType%>;base64,
             <%=newJob.tutorImg.data.toString('base64')%>" ></div>
           <div class="card-body">
@@ -161,7 +166,7 @@
             <%}%>
 
       <div class="card text-white bg-success  mb-3" style="width: 18rem;">
-        <div class="card-header "><a href="<%=newJob.tutorID%>" style = "position:relative; z-index :1000;">Tutor Name <%=newJob.tutorName%></a>
+        <div class="card-header "><a href="acc/<%=newJob.tutorID%>" style = "position:relative; z-index :1000;">Tutor Name <%=newJob.tutorName%></a>
           <img src="data:image/<%=newJob.tutorImg.contentType%>;base64,
             <%=newJob.tutorImg.data.toString('base64')%>" ></div>
           <div class="card-body">
