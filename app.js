@@ -15,7 +15,7 @@ var cron = require('node-cron');
 const fs = require('fs');
 var path = require('path');
 var multer = require('multer');
-const stripe = require('stripe')("sk_test_51H3MFKA4JtVDzRhwnBtxSGC9UwX4xQvj5ANvr9mOpiDWowkzvC3yOfY5H3akpGsusVAj5ybuPFV6ZTRaNO9JzhsH00sZsqEsRP");
+const stripe = require('stripe')(process.env.STRIPE);
 
 
 const app = express();
